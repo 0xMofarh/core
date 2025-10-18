@@ -1,0 +1,421 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block page_title %}الإعدادات{% endblock %}
+
+{% block breadcrumb_items %}
+<li><a href="{% url 'dashboard:dashboard' %}">الصفحة الرئيسية</a></li>
+<li>الإعدادات</li>
+{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Settings Navigation -->
+    <div class="lg:col-span-1">
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h3 class="card-title text-lg mb-4">
+                    <i class="fas fa-cog text-primary"></i>
+                    الإعدادات
+                </h3>
+                <ul class="menu p-0">
+                    <li><a href="#general" class="active">
+                        <i class="fas fa-sliders-h"></i>
+                        الإعدادات العامة
+                    </a></li>
+                    <li><a href="#notifications">
+                        <i class="fas fa-bell"></i>
+                        الإشعارات
+                    </a></li>
+                    <li><a href="#privacy">
+                        <i class="fas fa-lock"></i>
+                        الخصوصية والأمان
+                    </a></li>
+                    <li><a href="#billing">
+                        <i class="fas fa-credit-card"></i>
+                        الفواتير والدفع
+                    </a></li>
+                    <li><a href="#integrations">
+                        <i class="fas fa-plug"></i>
+                        التكاملات
+                    </a></li>
+                    <li><a href="#advanced">
+                        <i class="fas fa-cogs"></i>
+                        الإعدادات المتقدمة
+                    </a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Content -->
+    <div class="lg:col-span-2">
+        <!-- General Settings -->
+        <div id="general" class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title text-2xl mb-6">
+                    <i class="fas fa-sliders-h text-primary"></i>
+                    الإعدادات العامة
+                </h2>
+                
+                <form class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">اللغة</span>
+                            </label>
+                            <select class="select select-bordered">
+                                <option selected>العربية</option>
+                                <option>English</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">المنطقة الزمنية</span>
+                            </label>
+                            <select class="select select-bordered">
+                                <option selected>الرياض (GMT+3)</option>
+                                <option>دبي (GMT+4)</option>
+                                <option>القاهرة (GMT+2)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">العملة</span>
+                            </label>
+                            <select class="select select-bordered">
+                                <option selected>ريال سعودي (SAR)</option>
+                                <option>درهم إماراتي (AED)</option>
+                                <option>دولار أمريكي (USD)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">تنسيق التاريخ</span>
+                            </label>
+                            <select class="select select-bordered">
+                                <option selected>DD/MM/YYYY</option>
+                                <option>MM/DD/YYYY</option>
+                                <option>YYYY-MM-DD</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="card-actions justify-end">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save mr-2"></i>
+                            حفظ الإعدادات
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Notifications Settings -->
+        <div id="notifications" class="card bg-base-100 shadow-xl mt-8">
+            <div class="card-body">
+                <h2 class="card-title text-2xl mb-6">
+                    <i class="fas fa-bell text-secondary"></i>
+                    إعدادات الإشعارات
+                </h2>
+                
+                <div class="space-y-6">
+                    <div class="flex items-center justify-between p-4 bg-base-200 rounded-box">
+                        <div>
+                            <h4 class="font-semibold">إشعارات البريد الإلكتروني</h4>
+                            <p class="text-sm text-base-content/70">تلقي إشعارات مهمة عبر البريد الإلكتروني</p>
+                        </div>
+                        <input type="checkbox" class="toggle toggle-secondary" checked />
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-4 bg-base-200 rounded-box">
+                        <div>
+                            <h4 class="font-semibold">إشعارات الحملات</h4>
+                            <p class="text-sm text-base-content/70">إشعارات عند إنشاء أو تحديث الحملات</p>
+                        </div>
+                        <input type="checkbox" class="toggle toggle-secondary" checked />
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-4 bg-base-200 rounded-box">
+                        <div>
+                            <h4 class="font-semibold">إشعارات المؤثرين</h4>
+                            <p class="text-sm text-base-content/70">إشعارات عند انضمام مؤثرين جدد</p>
+                        </div>
+                        <input type="checkbox" class="toggle toggle-secondary" checked />
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-4 bg-base-200 rounded-box">
+                        <div>
+                            <h4 class="font-semibold">إشعارات التقارير</h4>
+                            <p class="text-sm text-base-content/70">إشعارات أسبوعية بالتقارير والإحصائيات</p>
+                        </div>
+                        <input type="checkbox" class="toggle toggle-secondary" />
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-4 bg-base-200 rounded-box">
+                        <div>
+                            <h4 class="font-semibold">إشعارات الأمان</h4>
+                            <p class="text-sm text-base-content/70">إشعارات تسجيل الدخول والأنشطة المهمة</p>
+                        </div>
+                        <input type="checkbox" class="toggle toggle-secondary" checked />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Privacy & Security -->
+        <div id="privacy" class="card bg-base-100 shadow-xl mt-8">
+            <div class="card-body">
+                <h2 class="card-title text-2xl mb-6">
+                    <i class="fas fa-lock text-accent"></i>
+                    الخصوصية والأمان
+                </h2>
+                
+                <div class="space-y-6">
+                    <div class="flex items-center justify-between p-4 bg-base-200 rounded-box">
+                        <div>
+                            <h4 class="font-semibold">المصادقة الثنائية</h4>
+                            <p class="text-sm text-base-content/70">طبقة إضافية من الحماية لحسابك</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="badge badge-warning">غير مفعل</span>
+                            <button class="btn btn-sm btn-accent">تفعيل</button>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-4 bg-base-200 rounded-box">
+                        <div>
+                            <h4 class="font-semibold">جلسات نشطة</h4>
+                            <p class="text-sm text-base-content/70">إدارة الجلسات النشطة على الأجهزة الأخرى</p>
+                        </div>
+                        <button class="btn btn-sm btn-outline">عرض</button>
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-4 bg-base-200 rounded-box">
+                        <div>
+                            <h4 class="font-semibold">سجل الأنشطة</h4>
+                            <p class="text-sm text-base-content/70">عرض سجل جميع الأنشطة على الحساب</p>
+                        </div>
+                        <button class="btn btn-sm btn-outline">عرض</button>
+                    </div>
+                    
+                    <div class="divider"></div>
+                    
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div>
+                            <h4 class="font-bold">حذف الحساب</h4>
+                            <p class="text-sm">هذا الإجراء لا يمكن التراجع عنه. سيتم حذف جميع بياناتك نهائياً.</p>
+                            <button class="btn btn-sm btn-error mt-2">حذف الحساب</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Billing & Payment -->
+        <div id="billing" class="card bg-base-100 shadow-xl mt-8">
+            <div class="card-body">
+                <h2 class="card-title text-2xl mb-6">
+                    <i class="fas fa-credit-card text-warning"></i>
+                    الفواتير والدفع
+                </h2>
+                
+                <div class="space-y-6">
+                    <!-- Current Plan -->
+                    <div class="card bg-base-200">
+                        <div class="card-body">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="card-title text-lg">
+                                        {% if user.package == 'free_trial' %}تجربة مجانية{% elif user.package == 'monthly' %}باقة شهرية{% else %}لا توجد باقة{% endif %}
+                                    </h3>
+                                    <p class="text-base-content/70">
+                                        {% if user.package == 'free_trial' %}7 أيام مجانية{% elif user.package == 'monthly' %}299 ريال شهرياً{% endif %}
+                                    </p>
+                                </div>
+                                <button class="btn btn-primary">ترقية الباقة</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Payment Methods -->
+                    <div>
+                        <h4 class="font-semibold mb-4">طرق الدفع</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-3 bg-base-200 rounded-box">
+                                <div class="flex items-center gap-3">
+                                    <i class="fas fa-credit-card text-primary text-xl"></i>
+                                    <span>**** **** **** 1234</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="badge badge-success badge-sm">افتراضي</span>
+                                    <button class="btn btn-sm btn-ghost">تعديل</button>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline btn-sm mt-3">
+                            <i class="fas fa-plus mr-2"></i>
+                            إضافة طريقة دفع جديدة
+                        </button>
+                    </div>
+                    
+                    <!-- Billing History -->
+                    <div>
+                        <h4 class="font-semibold mb-4">سجل الفواتير</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-3 bg-base-200 rounded-box">
+                                <div>
+                                    <h5 class="font-semibold">فترة سبتمبر 2024</h5>
+                                    <p class="text-sm text-base-content/70">15 سبتمبر 2024</p>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-semibold">299 ريال</div>
+                                    <div class="badge badge-success badge-sm">مدفوع</div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline btn-sm mt-3">عرض جميع الفواتير</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Integrations -->
+        <div id="integrations" class="card bg-base-100 shadow-xl mt-8">
+            <div class="card-body">
+                <h2 class="card-title text-2xl mb-6">
+                    <i class="fas fa-plug text-info"></i>
+                    التكاملات
+                </h2>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-4 bg-base-200 rounded-box">
+                        <div class="flex items-center gap-3">
+                            <i class="fab fa-google text-red-500 text-2xl"></i>
+                            <div>
+                                <h4 class="font-semibold">Google Analytics</h4>
+                                <p class="text-sm text-base-content/70">تحليل بيانات الحملات</p>
+                            </div>
+                        </div>
+                        <button class="btn btn-sm btn-outline">اتصال</button>
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-4 bg-base-200 rounded-box">
+                        <div class="flex items-center gap-3">
+                            <i class="fab fa-facebook text-blue-500 text-2xl"></i>
+                            <div>
+                                <h4 class="font-semibold">Facebook Ads</h4>
+                                <p class="text-sm text-base-content/70">إدارة الإعلانات على فيسبوك</p>
+                            </div>
+                        </div>
+                        <button class="btn btn-sm btn-outline">اتصال</button>
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-4 bg-base-200 rounded-box">
+                        <div class="flex items-center gap-3">
+                            <i class="fas fa-envelope text-green-500 text-2xl"></i>
+                            <div>
+                                <h4 class="font-semibold">Mailchimp</h4>
+                                <p class="text-sm text-base-content/70">إدارة قوائم البريد الإلكتروني</p>
+                            </div>
+                        </div>
+                        <button class="btn btn-sm btn-outline">اتصال</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Settings -->
+        <div id="advanced" class="card bg-base-100 shadow-xl mt-8">
+            <div class="card-body">
+                <h2 class="card-title text-2xl mb-6">
+                    <i class="fas fa-cogs text-warning"></i>
+                    الإعدادات المتقدمة
+                </h2>
+                
+                <div class="space-y-6">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">API Key</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="text" value="sk-1234567890abcdef" class="input input-bordered flex-1" readonly>
+                            <button class="btn btn-square">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <label class="label">
+                            <span class="label-text-alt">استخدم هذا المفتاح للوصول إلى API</span>
+                        </label>
+                    </div>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Webhook URL</span>
+                        </label>
+                        <input type="url" class="input input-bordered" placeholder="https://your-domain.com/webhook">
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-4 bg-base-200 rounded-box">
+                        <div>
+                            <h4 class="font-semibold">وضع المطور</h4>
+                            <p class="text-sm text-base-content/70">تفعيل أدوات التطوير والتشخيص</p>
+                        </div>
+                        <input type="checkbox" class="toggle toggle-warning" />
+                    </div>
+                    
+                    <div class="card-actions justify-end">
+                        <button class="btn btn-warning">
+                            <i class="fas fa-save mr-2"></i>
+                            حفظ الإعدادات المتقدمة
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Settings navigation
+    document.addEventListener('DOMContentLoaded', function() {
+        const menuItems = document.querySelectorAll('.menu a');
+        const settingsSections = document.querySelectorAll('[id]');
+        
+        menuItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all items
+                menuItems.forEach(i => i.classList.remove('active'));
+                // Add active class to clicked item
+                this.classList.add('active');
+                
+                // Hide all sections
+                settingsSections.forEach(section => {
+                    if (section.id !== 'general') {
+                        section.style.display = 'none';
+                    }
+                });
+                
+                // Show target section
+                const targetId = this.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    targetSection.style.display = 'block';
+                }
+            });
+        });
+        
+        // Show general settings by default
+        settingsSections.forEach(section => {
+            if (section.id !== 'general') {
+                section.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}

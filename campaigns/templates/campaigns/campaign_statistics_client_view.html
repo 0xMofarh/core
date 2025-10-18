@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إحصائيات الحملة - حملة الأزياء الصيفية</title>
+    
+    <!-- TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- DaisyUI -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .stats-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .progress {
+            transition: width 1.5s ease-in-out;
+        }
+        
+        .stat {
+            transition: all 0.3s ease;
+        }
+        
+        .stat:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <div class="header-gradient text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex items-center justify-center gap-4 mb-4">
+                <i class="fas fa-chart-line text-4xl"></i>
+                <h1 class="text-4xl font-bold">إحصائيات الحملة</h1>
+            </div>
+            <h2 class="text-2xl mb-2">حملة الأزياء الصيفية</h2>
+            <p class="text-lg opacity-90">شركة الأزياء الراقية</p>
+            <div class="badge badge-success badge-lg mt-4">حملة نشطة</div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Key Performance Indicators -->
+        <div class="stats-card card shadow-2xl mb-8 fade-in">
+            <div class="card-body">
+                <h2 class="card-title text-2xl mb-6 text-center">
+                    <i class="fas fa-tachometer-alt text-primary"></i>
+                    مؤشرات الأداء الرئيسية
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Total Participants -->
+                    <div class="stat bg-primary/10 rounded-box p-6">
+                        <div class="stat-figure text-primary">
+                            <i class="fas fa-users text-4xl"></i>
+                        </div>
+                        <div class="stat-title text-lg">إجمالي المشاركين</div>
+                        <div class="stat-value text-primary text-3xl">12</div>
+                        <div class="stat-desc">مؤثر في الحملة</div>
+                    </div>
+                    
+                    <!-- Accepted Participants -->
+                    <div class="stat bg-success/10 rounded-box p-6">
+                        <div class="stat-figure text-success">
+                            <i class="fas fa-check-circle text-4xl"></i>
+                        </div>
+                        <div class="stat-title text-lg">المقبولون</div>
+                        <div class="stat-value text-success text-3xl">8</div>
+                        <div class="stat-desc">67% من إجمالي المشاركين</div>
+                    </div>
+                    
+                    <!-- Total Budget -->
+                    <div class="stat bg-secondary/10 rounded-box p-6">
+                        <div class="stat-figure text-secondary">
+                            <i class="fas fa-money-bill-wave text-4xl"></i>
+                        </div>
+                        <div class="stat-title text-lg">إجمالي الميزانية</div>
+                        <div class="stat-value text-secondary text-3xl">50,000</div>
+                        <div class="stat-desc">ريال سعودي</div>
+                    </div>
+                    
+                    <!-- Spent Budget -->
+                    <div class="stat bg-accent/10 rounded-box p-6">
+                        <div class="stat-figure text-accent">
+                            <i class="fas fa-coins text-4xl"></i>
+                        </div>
+                        <div class="stat-title text-lg">المبلغ المنفق</div>
+                        <div class="stat-value text-accent text-3xl">32,500</div>
+                        <div class="stat-desc">65% من الميزانية</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Campaign Performance -->
+        <div class="stats-card card shadow-2xl mb-8 fade-in">
+            <div class="card-body">
+                <h2 class="card-title text-2xl mb-6 text-center">
+                    <i class="fas fa-chart-bar text-primary"></i>
+                    أداء الحملة
+                </h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Engagement Stats -->
+                    <div class="space-y-6">
+                        <h3 class="text-xl font-semibold text-primary text-center">إحصائيات التفاعل</h3>
+                        
+                        <div class="stats stats-vertical shadow-lg">
+                            <div class="stat bg-primary/5">
+                                <div class="stat-figure text-primary">
+                                    <i class="fas fa-heart text-3xl"></i>
+                                </div>
+                                <div class="stat-title text-lg">إجمالي الإعجابات</div>
+                                <div class="stat-value text-primary text-2xl">125,430</div>
+                                <div class="stat-desc">من جميع المشاركين</div>
+                            </div>
+                            
+                            <div class="stat bg-secondary/5">
+                                <div class="stat-figure text-secondary">
+                                    <i class="fas fa-comment text-3xl"></i>
+                                </div>
+                                <div class="stat-title text-lg">إجمالي التعليقات</div>
+                                <div class="stat-value text-secondary text-2xl">8,920</div>
+                                <div class="stat-desc">تفاعل الجمهور</div>
+                            </div>
+                            
+                            <div class="stat bg-accent/5">
+                                <div class="stat-figure text-accent">
+                                    <i class="fas fa-share text-3xl"></i>
+                                </div>
+                                <div class="stat-title text-lg">إجمالي المشاركات</div>
+                                <div class="stat-value text-accent text-2xl">3,450</div>
+                                <div class="stat-desc">مشاركات ومشاركات</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Reach Stats -->
+                    <div class="space-y-6">
+                        <h3 class="text-xl font-semibold text-secondary text-center">إحصائيات الوصول</h3>
+                        
+                        <div class="stats stats-vertical shadow-lg">
+                            <div class="stat bg-primary/5">
+                                <div class="stat-figure text-primary">
+                                    <i class="fas fa-eye text-3xl"></i>
+                                </div>
+                                <div class="stat-title text-lg">إجمالي المشاهدات</div>
+                                <div class="stat-value text-primary text-2xl">2,450,000</div>
+                                <div class="stat-desc">مشاهدات المحتوى</div>
+                            </div>
+                            
+                            <div class="stat bg-secondary/5">
+                                <div class="stat-figure text-secondary">
+                                    <i class="fas fa-users text-3xl"></i>
+                                </div>
+                                <div class="stat-title text-lg">إجمالي المتابعين</div>
+                                <div class="stat-value text-secondary text-2xl">1,850,000</div>
+                                <div class="stat-desc">متابعي المؤثرين</div>
+                            </div>
+                            
+                            <div class="stat bg-accent/5">
+                                <div class="stat-figure text-accent">
+                                    <i class="fas fa-percentage text-3xl"></i>
+                                </div>
+                                <div class="stat-title text-lg">معدل التفاعل</div>
+                                <div class="stat-value text-accent text-2xl">5.8%</div>
+                                <div class="stat-desc">متوسط التفاعل</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Participants Performance -->
+        <div class="stats-card card shadow-2xl mb-8 fade-in">
+            <div class="card-body">
+                <h2 class="card-title text-2xl mb-6 text-center">
+                    <i class="fas fa-trophy text-primary"></i>
+                    أداء المشاركين
+                </h2>
+                
+                <div class="overflow-x-auto">
+                    <table class="table table-zebra w-full">
+                        <thead>
+                            <tr class="bg-primary/10">
+                                <th class="text-lg">المؤثر</th>
+                                <th class="text-lg">الحالة</th>
+                                <th class="text-lg">المتابعين</th>
+                                <th class="text-lg">التفاعل</th>
+                                <th class="text-lg">الإعجابات</th>
+                                <th class="text-lg">التعليقات</th>
+                                <th class="text-lg">المشاركات</th>
+                                <th class="text-lg">السعر</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="hover">
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div class="avatar">
+                                            <div class="w-12 rounded-full bg-primary text-primary-content flex items-center justify-center">
+                                                <span class="text-sm font-bold">س</span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="font-bold text-lg">سارة أحمد</div>
+                                            <div class="text-sm text-base-content/70">الرياض</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><div class="badge badge-success badge-lg">مقبول</div></td>
+                                <td><div class="font-bold text-lg">450,000</div></td>
+                                <td><div class="font-bold text-accent text-lg">6.2%</div></td>
+                                <td><div class="font-bold text-primary text-lg">28,500</div></td>
+                                <td><div class="font-bold text-secondary text-lg">1,890</div></td>
+                                <td><div class="font-bold text-accent text-lg">650</div></td>
+                                <td><div class="font-bold text-success text-lg">8,000 ريال</div></td>
+                            </tr>
+                            <tr class="hover">
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div class="avatar">
+                                            <div class="w-12 rounded-full bg-secondary text-secondary-content flex items-center justify-center">
+                                                <span class="text-sm font-bold">م</span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="font-bold text-lg">محمد علي</div>
+                                            <div class="text-sm text-base-content/70">جدة</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><div class="badge badge-success badge-lg">مقبول</div></td>
+                                <td><div class="font-bold text-lg">320,000</div></td>
+                                <td><div class="font-bold text-accent text-lg">5.8%</div></td>
+                                <td><div class="font-bold text-primary text-lg">18,600</div></td>
+                                <td><div class="font-bold text-secondary text-lg">1,200</div></td>
+                                <td><div class="font-bold text-accent text-lg">420</div></td>
+                                <td><div class="font-bold text-success text-lg">6,500 ريال</div></td>
+                            </tr>
+                            <tr class="hover">
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div class="avatar">
+                                            <div class="w-12 rounded-full bg-accent text-accent-content flex items-center justify-center">
+                                                <span class="text-sm font-bold">ف</span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="font-bold text-lg">فاطمة محمد</div>
+                                            <div class="text-sm text-base-content/70">الدمام</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><div class="badge badge-success badge-lg">مقبول</div></td>
+                                <td><div class="font-bold text-lg">280,000</div></td>
+                                <td><div class="font-bold text-accent text-lg">7.1%</div></td>
+                                <td><div class="font-bold text-primary text-lg">19,880</div></td>
+                                <td><div class="font-bold text-secondary text-lg">1,450</div></td>
+                                <td><div class="font-bold text-accent text-lg">580</div></td>
+                                <td><div class="font-bold text-success text-lg">5,800 ريال</div></td>
+                            </tr>
+                            <tr class="hover">
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div class="avatar">
+                                            <div class="w-12 rounded-full bg-warning text-warning-content flex items-center justify-center">
+                                                <span class="text-sm font-bold">ع</span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="font-bold text-lg">عبدالله خالد</div>
+                                            <div class="text-sm text-base-content/70">الرياض</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><div class="badge badge-warning badge-lg">في الانتظار</div></td>
+                                <td><div class="font-bold text-lg">180,000</div></td>
+                                <td><div class="font-bold text-accent text-lg">4.9%</div></td>
+                                <td><div class="font-bold text-primary text-lg">8,820</div></td>
+                                <td><div class="font-bold text-secondary text-lg">650</div></td>
+                                <td><div class="font-bold text-accent text-lg">280</div></td>
+                                <td><div class="font-bold text-success text-lg">4,200 ريال</div></td>
+                            </tr>
+                            <tr class="hover">
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div class="avatar">
+                                            <div class="w-12 rounded-full bg-info text-info-content flex items-center justify-center">
+                                                <span class="text-sm font-bold">ن</span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="font-bold text-lg">نورا سعد</div>
+                                            <div class="text-sm text-base-content/70">مكة</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><div class="badge badge-info badge-lg">مكتمل</div></td>
+                                <td><div class="font-bold text-lg">220,000</div></td>
+                                <td><div class="font-bold text-accent text-lg">6.5%</div></td>
+                                <td><div class="font-bold text-primary text-lg">14,300</div></td>
+                                <td><div class="font-bold text-secondary text-lg">980</div></td>
+                                <td><div class="font-bold text-accent text-lg">350</div></td>
+                                <td><div class="font-bold text-success text-lg">5,500 ريال</div></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Campaign Summary -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Campaign Progress -->
+            <div class="stats-card card shadow-2xl fade-in">
+                <div class="card-body">
+                    <h3 class="card-title text-xl mb-6 text-center">
+                        <i class="fas fa-chart-pie text-primary"></i>
+                        تقدم الحملة
+                    </h3>
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-lg font-medium">المدة المنقضية</span>
+                                <span class="text-lg font-bold text-primary">15 يوم متبقي</span>
+                            </div>
+                            <progress class="progress progress-primary w-full h-4" value="60" max="100"></progress>
+                        </div>
+                        
+                        <div class="divider"></div>
+                        
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-lg">تاريخ البداية</span>
+                                <span class="text-lg font-bold">2024/01/15</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-lg">تاريخ النهاية</span>
+                                <span class="text-lg font-bold">2024/02/15</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-lg">نوع الحملة</span>
+                                <span class="text-lg font-bold">أزياء</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-lg">الجمهور المستهدف</span>
+                                <span class="text-lg font-bold">النساء 18-35 سنة</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Budget & ROI -->
+            <div class="stats-card card shadow-2xl fade-in">
+                <div class="card-body">
+                    <h3 class="card-title text-xl mb-6 text-center">
+                        <i class="fas fa-pie-chart text-secondary"></i>
+                        الميزانية وعائد الاستثمار
+                    </h3>
+                    
+                    <div class="space-y-6">
+                        <div class="flex justify-between items-center">
+                            <span class="text-lg">الميزانية الإجمالية</span>
+                            <span class="text-lg font-bold text-secondary">50,000 ريال</span>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <span class="text-lg">المبلغ المنفق</span>
+                            <span class="text-lg font-bold text-accent">32,500 ريال</span>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <span class="text-lg">المبلغ المتبقي</span>
+                            <span class="text-lg font-bold text-primary">17,500 ريال</span>
+                        </div>
+                        
+                        <div class="divider"></div>
+                        
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="text-lg font-medium">استخدام الميزانية</span>
+                                <span class="text-lg font-bold">65%</span>
+                            </div>
+                            <progress class="progress progress-secondary w-full h-4" value="65" max="100"></progress>
+                        </div>
+                        
+                        <div class="divider"></div>
+                        
+                        <div class="text-center">
+                            <div class="text-4xl font-bold text-success mb-2">285%</div>
+                            <div class="text-xl text-base-content/70">عائد الاستثمار</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-12 mb-8">
+            <div class="stats-card card shadow-xl">
+                <div class="card-body">
+                    <h3 class="text-2xl font-bold mb-4">ملخص الأداء</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-primary mb-2">2.45M</div>
+                            <div class="text-lg">إجمالي المشاهدات</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-secondary mb-2">125K</div>
+                            <div class="text-lg">إجمالي الإعجابات</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-accent mb-2">5.8%</div>
+                            <div class="text-lg">معدل التفاعل</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Initialize page animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add fade-in animation to cards
+            const cards = document.querySelectorAll('.fade-in');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.2}s`;
+            });
+            
+            // Animate progress bars
+            const progressBars = document.querySelectorAll('.progress');
+            progressBars.forEach(bar => {
+                const value = bar.getAttribute('value');
+                bar.style.width = '0%';
+                setTimeout(() => {
+                    bar.style.width = value + '%';
+                }, 1000);
+            });
+            
+            // Add hover effects to table rows
+            const tableRows = document.querySelectorAll('tbody tr');
+            tableRows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.backgroundColor = 'rgba(59, 130, 246, 0.1)';
+                    this.style.transform = 'scale(1.02)';
+                });
+                row.addEventListener('mouseleave', function() {
+                    this.style.backgroundColor = '';
+                    this.style.transform = 'scale(1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,300 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block page_title %}التقارير والإحصائيات{% endblock %}
+
+{% block breadcrumb_items %}
+<li><a href="{% url 'dashboard:dashboard' %}">الصفحة الرئيسية</a></li>
+<li>التقارير والإحصائيات</li>
+{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="card bg-base-100 shadow-xl mb-8">
+    <div class="card-body">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+                <h2 class="card-title text-3xl mb-2">
+                    <i class="fas fa-chart-bar text-primary"></i>
+                    التقارير والإحصائيات
+                </h2>
+                <p class="text-base-content/70">تحليلات مفصلة لأداء الحملات والمؤثرين</p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-2">
+                <button class="btn btn-primary btn-sm">
+                    <i class="fas fa-download mr-2"></i>
+                    تصدير التقرير
+                </button>
+                <button class="btn btn-secondary btn-sm">
+                    <i class="fas fa-calendar mr-2"></i>
+                    اختيار الفترة
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Overview Stats -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Total Campaigns -->
+    <div class="stat bg-base-100 shadow rounded-box">
+        <div class="stat-figure text-primary">
+            <i class="fas fa-bullhorn text-4xl"></i>
+        </div>
+        <div class="stat-title">إجمالي الحملات</div>
+        <div class="stat-value text-primary">24</div>
+        <div class="stat-desc">+3 هذا الشهر</div>
+    </div>
+
+    <!-- Total Influencers -->
+    <div class="stat bg-base-100 shadow rounded-box">
+        <div class="stat-figure text-secondary">
+            <i class="fas fa-users text-4xl"></i>
+        </div>
+        <div class="stat-title">إجمالي المؤثرين</div>
+        <div class="stat-value text-secondary">156</div>
+        <div class="stat-desc">+12 هذا الشهر</div>
+    </div>
+
+    <!-- Total Reach -->
+    <div class="stat bg-base-100 shadow rounded-box">
+        <div class="stat-figure text-accent">
+            <i class="fas fa-eye text-4xl"></i>
+        </div>
+        <div class="stat-title">إجمالي الوصول</div>
+        <div class="stat-value text-accent">2.4M</div>
+        <div class="stat-desc">+15% من الشهر الماضي</div>
+    </div>
+
+    <!-- Engagement Rate -->
+    <div class="stat bg-base-100 shadow rounded-box">
+        <div class="stat-figure text-warning">
+            <i class="fas fa-heart text-4xl"></i>
+        </div>
+        <div class="stat-title">معدل التفاعل</div>
+        <div class="stat-value text-warning">4.2%</div>
+        <div class="stat-desc">+0.3% من الشهر الماضي</div>
+    </div>
+</div>
+
+<!-- Charts Section -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+    <!-- Campaign Performance Chart -->
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h3 class="card-title text-xl mb-4">
+                <i class="fas fa-chart-line text-primary"></i>
+                أداء الحملات
+            </h3>
+            <div class="h-64 bg-base-200 rounded-box flex items-center justify-center">
+                <div class="text-center">
+                    <i class="fas fa-chart-line text-6xl text-base-content/30 mb-4"></i>
+                    <p class="text-base-content/70">مخطط أداء الحملات</p>
+                    <p class="text-sm text-base-content/50">سيتم إضافة المخططات قريباً</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Influencer Engagement Chart -->
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h3 class="card-title text-xl mb-4">
+                <i class="fas fa-chart-pie text-secondary"></i>
+                تفاعل المؤثرين
+            </h3>
+            <div class="h-64 bg-base-200 rounded-box flex items-center justify-center">
+                <div class="text-center">
+                    <i class="fas fa-chart-pie text-6xl text-base-content/30 mb-4"></i>
+                    <p class="text-base-content/70">مخطط تفاعل المؤثرين</p>
+                    <p class="text-sm text-base-content/50">سيتم إضافة المخططات قريباً</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Detailed Reports -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Top Performing Campaigns -->
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h3 class="card-title text-xl mb-4">
+                <i class="fas fa-trophy text-warning"></i>
+                أفضل الحملات أداءً
+            </h3>
+            <div class="space-y-4">
+                <div class="flex items-center justify-between p-3 bg-base-200 rounded-box">
+                    <div>
+                        <h4 class="font-semibold">حملة الأزياء الصيفية</h4>
+                        <p class="text-sm text-base-content/70">مارس 2024</p>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-lg font-bold text-success">4.8%</div>
+                        <div class="text-xs text-base-content/50">تفاعل</div>
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-between p-3 bg-base-200 rounded-box">
+                    <div>
+                        <h4 class="font-semibold">حملة الطعام الصحي</h4>
+                        <p class="text-sm text-base-content/70">فبراير 2024</p>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-lg font-bold text-success">4.2%</div>
+                        <div class="text-xs text-base-content/50">تفاعل</div>
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-between p-3 bg-base-200 rounded-box">
+                    <div>
+                        <h4 class="font-semibold">حملة السفر</h4>
+                        <p class="text-sm text-base-content/70">يناير 2024</p>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-lg font-bold text-success">3.9%</div>
+                        <div class="text-xs text-base-content/50">تفاعل</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Influencers -->
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h3 class="card-title text-xl mb-4">
+                <i class="fas fa-star text-accent"></i>
+                أفضل المؤثرين
+            </h3>
+            <div class="space-y-4">
+                <div class="flex items-center gap-3 p-3 bg-base-200 rounded-box">
+                    <div class="avatar">
+                        <div class="w-10 rounded-full bg-primary text-primary-content flex items-center justify-center">
+                            <span class="text-sm font-bold">أ</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-semibold">أحمد محمد</h4>
+                        <p class="text-sm text-base-content/70">أزياء</p>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-lg font-bold text-accent">5.2%</div>
+                        <div class="text-xs text-base-content/50">تفاعل</div>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-3 p-3 bg-base-200 rounded-box">
+                    <div class="avatar">
+                        <div class="w-10 rounded-full bg-secondary text-secondary-content flex items-center justify-center">
+                            <span class="text-sm font-bold">ف</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-semibold">فاطمة علي</h4>
+                        <p class="text-sm text-base-content/70">جمال</p>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-lg font-bold text-accent">4.8%</div>
+                        <div class="text-xs text-base-content/50">تفاعل</div>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-3 p-3 bg-base-200 rounded-box">
+                    <div class="avatar">
+                        <div class="w-10 rounded-full bg-accent text-accent-content flex items-center justify-center">
+                            <span class="text-sm font-bold">س</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-semibold">سارة أحمد</h4>
+                        <p class="text-sm text-base-content/70">طعام</p>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-lg font-bold text-accent">4.5%</div>
+                        <div class="text-xs text-base-content/50">تفاعل</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Platform Distribution -->
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h3 class="card-title text-xl mb-4">
+                <i class="fas fa-share-alt text-info"></i>
+                توزيع المنصات
+            </h3>
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 bg-pink-500 rounded-full"></div>
+                        <span class="text-sm">إنستقرام</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <progress class="progress progress-primary w-20" value="45" max="100"></progress>
+                        <span class="text-sm font-semibold">45%</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 bg-black rounded-full"></div>
+                        <span class="text-sm">تيك توك</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <progress class="progress progress-secondary w-20" value="30" max="100"></progress>
+                        <span class="text-sm font-semibold">30%</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 bg-red-500 rounded-full"></div>
+                        <span class="text-sm">يوتيوب</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <progress class="progress progress-accent w-20" value="15" max="100"></progress>
+                        <span class="text-sm font-semibold">15%</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 bg-yellow-500 rounded-full"></div>
+                        <span class="text-sm">سناب شات</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <progress class="progress progress-warning w-20" value="10" max="100"></progress>
+                        <span class="text-sm font-semibold">10%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Export Options -->
+<div class="card bg-base-100 shadow-xl mt-8">
+    <div class="card-body">
+        <h3 class="card-title text-xl mb-4">
+            <i class="fas fa-download text-primary"></i>
+            خيارات التصدير
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <button class="btn btn-outline btn-primary">
+                <i class="fas fa-file-excel mr-2"></i>
+                تصدير Excel
+            </button>
+            <button class="btn btn-outline btn-secondary">
+                <i class="fas fa-file-pdf mr-2"></i>
+                تصدير PDF
+            </button>
+            <button class="btn btn-outline btn-accent">
+                <i class="fas fa-file-csv mr-2"></i>
+                تصدير CSV
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}

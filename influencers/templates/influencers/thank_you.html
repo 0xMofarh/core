@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شكراً لك - منصة المؤثرين</title>
+    
+    <!-- TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- DaisyUI -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        .animate-slide-down {
+            animation: slideDown 0.6s ease-out;
+        }
+        
+        .animate-scale-in {
+            animation: scaleIn 0.8s ease-out;
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 1s ease-out;
+        }
+        
+        .success-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 20px 60px rgba(16, 185, 129, 0.4);
+            margin: 0 auto;
+        }
+        
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #f0f;
+            position: absolute;
+            animation: confetti-fall 3s linear infinite;
+        }
+        
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-base-200 via-base-100 to-base-200 min-h-screen">
+    
+    <!-- Navbar -->
+    <div class="navbar bg-base-100 shadow-lg">
+        <div class="flex-1">
+            <a href="{% url 'main:home' %}" class="btn btn-ghost text-xl">
+                <i class="fas fa-users text-primary ml-2"></i>
+                منصة المؤثرين
+            </a>
+        </div>
+        <div class="flex-none">
+            <button class="btn btn-ghost btn-circle">
+                <i class="fas fa-bell"></i>
+            </button>
+            <div class="dropdown dropdown-end">
+                <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+                    <div class="w-10 rounded-full">
+                        <i class="fas fa-user-circle text-3xl"></i>
+                    </div>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-12">
+        
+        <!-- Success Card -->
+        <div class="max-w-3xl mx-auto">
+            
+            <!-- Success Icon -->
+            <div class="text-center mb-8 animate-scale-in">
+                <div class="success-circle">
+                    <i class="fas fa-check text-white text-7xl"></i>
+                </div>
+            </div>
+            
+            <!-- Main Success Message -->
+            <div class="card bg-base-100 shadow-2xl mb-6 animate-slide-down">
+                <div class="card-body text-center p-10">
+                    <h1 class="text-5xl font-bold text-success mb-4">
+                        تم بنجاح! 🎉
+                    </h1>
+                    <h2 class="text-3xl font-semibold text-base-content mb-6">
+                        شكراً لإضافة بياناتك
+                    </h2>
+                    <p class="text-xl text-base-content/70 leading-relaxed mb-4">
+                        تم استلام معلوماتك بنجاح وسيتم مراجعتها من قبل فريقنا المتخصص
+                    </p>
+                    <div class="divider"></div>
+                    <p class="text-lg text-base-content/60">
+                        <i class="fas fa-clock ml-2 text-primary"></i>
+                        سنتواصل معك قريباً عبر رقم الجوال المسجل
+                    </p>
+                </div>
+            </div>
+        
+        
+            
+            <!-- Contact Information -->
+            <div class="card bg-gradient-to-br from-primary/5 to-primary/10 shadow-lg mb-6 animate-fade-in">
+                <div class="card-body">
+                    <h3 class="card-title text-2xl mb-4">
+                        <i class="fas fa-headset text-primary ml-2"></i>
+                        هل تحتاج إلى مساعدة؟
+                    </h3>
+                    <p class="text-base-content/70 mb-4">
+                        فريق الدعم متاح للإجابة على استفساراتك في أي وقت
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="flex items-center gap-3 bg-base-100 p-4 rounded-lg">
+                            <i class="fas fa-envelope text-primary text-xl"></i>
+                            <div>
+                                <p class="text-sm text-base-content/60">البريد الإلكتروني</p>
+                                <p class="font-semibold">support@impact-sync.com</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 bg-base-100 p-4 rounded-lg">
+                            <i class="fas fa-phone text-primary text-xl"></i>
+                            <div>
+                                <p class="text-sm text-base-content/60">رقم الدعم واتس اب </p>
+                                <p class="font-semibold">000000000000</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Social Media Links -->
+            <div class="text-center mt-10 animate-fade-in">
+                <p class="text-base-content/60 mb-4">تابعنا على وسائل التواصل الاجتماعي</p>
+                <div class="flex justify-center gap-4">
+                    <a href="#" class="btn btn-circle btn-outline hover:btn-primary">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                    <a href="#" class="btn btn-circle btn-outline hover:btn-primary">
+                        <i class="fab fa-instagram text-xl"></i>
+                    </a>
+                    <a href="#" class="btn btn-circle btn-outline hover:btn-primary">
+                        <i class="fab fa-snapchat text-xl"></i>
+                    </a>
+                    <a href="#" class="btn btn-circle btn-outline hover:btn-primary">
+                        <i class="fab fa-tiktok text-xl"></i>
+                    </a>
+                    <a href="#" class="btn btn-circle btn-outline hover:btn-primary">
+                        <i class="fab fa-linkedin text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            
+        </div>
+        
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer footer-center p-10 bg-base-100 text-base-content mt-12">
+        <aside>
+            <i class="fas fa-users text-5xl text-primary pulse-animation"></i>
+            <p class="font-bold text-lg">
+                منصة المؤثرين
+            </p> 
+            <p>نربط المؤثرين بالعلامات التجارية</p>
+            <p class="text-sm text-base-content/60">جميع الحقوق محفوظة © 2025</p>
+        </aside>
+        <nav>
+            <div class="grid grid-flow-col gap-4">
+                <a href="#" class="link link-hover">من نحن</a>
+                <a href="#" class="link link-hover">اتصل بنا</a>
+                <a href="#" class="link link-hover">الشروط والأحكام</a>
+                <a href="#" class="link link-hover">سياسة الخصوصية</a>
+            </div>
+        </nav>
+    </footer>
+
+
+</body>
+</html>

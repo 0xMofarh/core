@@ -1,0 +1,105 @@
+{% extends 'main/base.html' %}
+
+{% block title %}403 - ممنوع الوصول | منصة التأثير الرقمي{% endblock %}
+
+{% block content %}
+<!-- Error 403 Section -->
+<section class="min-h-screen flex items-center justify-center section-bg-1 relative overflow-hidden">
+    <!-- Background Elements -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="floating-element top-20 left-10 w-20 h-20 bg-yellow-400 rounded-full blur-xl opacity-20"></div>
+        <div class="floating-element top-40 right-20 w-16 h-16 bg-orange-400 rounded-full blur-xl opacity-20"></div>
+        <div class="floating-element bottom-40 left-20 w-24 h-24 bg-red-400 rounded-full blur-xl opacity-20"></div>
+        <div class="floating-element bottom-20 right-10 w-18 h-18 bg-yellow-500 rounded-full blur-xl opacity-20"></div>
+    </div>
+    
+    <div class="container mx-auto px-4 text-center relative z-10">
+        <div class="max-w-4xl mx-auto">
+            <!-- Error Number -->
+            <div class="mb-8" data-aos="fade-up">
+                <h1 class="text-8xl sm:text-9xl lg:text-[12rem] font-bold opacity-20" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                    403
+                </h1>
+            </div>
+            
+            <!-- Error Icon -->
+            <div class="mb-8" data-aos="fade-up" data-aos-delay="200">
+                <div class="w-32 h-32 rounded-full flex items-center justify-center mx-auto shadow-2xl" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                    <i class="fas fa-lock text-white text-5xl"></i>
+                </div>
+            </div>
+            
+            <!-- Error Title -->
+            <div class="mb-6" data-aos="fade-up" data-aos-delay="400">
+                <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-arabic mb-4" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                    ممنوع الوصول
+                </h2>
+                <p class="text-xl sm:text-2xl text-gray-600 text-modern">
+                    ليس لديك صلاحية للوصول إلى هذه الصفحة
+                </p>
+            </div>
+            
+            <!-- Error Description -->
+            <div class="mb-12" data-aos="fade-up" data-aos-delay="600">
+                <p class="text-lg text-gray-500 text-modern max-w-2xl mx-auto leading-relaxed">
+                    عذراً، لا يمكنك الوصول إلى هذه الصفحة. قد تحتاج إلى تسجيل الدخول 
+                    أو قد لا تملك الصلاحيات المطلوبة لعرض هذا المحتوى.
+                </p>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-6 justify-center items-center" data-aos="fade-up" data-aos-delay="800">
+                <a href="{% url 'authentication:login' %}" class="btn btn-primary text-white font-medium text-lg px-8 py-4">
+                    <i class="fas fa-sign-in-alt ml-2"></i>
+                    تسجيل الدخول
+                </a>
+                <a href="{% url 'main:landing' %}" class="btn btn-outline btn-lg text-modern font-medium border-2 border-gray-300 hover:border-gray-400">
+                    <i class="fas fa-home ml-2"></i>
+                    العودة للصفحة الرئيسية
+                </a>
+            </div>
+            
+            <!-- Login Form -->
+            <div class="mt-16 max-w-md mx-auto" data-aos="fade-up" data-aos-delay="1000">
+                <div class="glass-card rounded-2xl p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 text-arabic">تسجيل الدخول</h3>
+                    <form class="space-y-4">
+                        <div class="form-control">
+                            <label class="label" for="email">
+                                <span class="label-text text-modern font-medium text-gray-700">البريد الإلكتروني</span>
+                            </label>
+                            <input type="email" id="email" class="input input-bordered w-full glass-card border-gray-200" placeholder="أدخل بريدك الإلكتروني" required>
+                        </div>
+                        
+                        <div class="form-control">
+                            <label class="label" for="password">
+                                <span class="label-text text-modern font-medium text-gray-700">كلمة المرور</span>
+                            </label>
+                            <input type="password" id="password" class="input input-bordered w-full glass-card border-gray-200" placeholder="أدخل كلمة المرور" required>
+                        </div>
+                        
+                        <div class="form-control">
+                            <button type="submit" class="btn btn-primary text-white font-medium">
+                                <i class="fas fa-sign-in-alt ml-2"></i>
+                                تسجيل الدخول
+                            </button>
+                        </div>
+                        
+                        <div class="text-center">
+                            <a href="{% url 'authentication:register' %}" class="link link-primary text-modern">ليس لديك حساب؟ سجل الآن</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Help Info -->
+            <div class="mt-12" data-aos="fade-up" data-aos-delay="1200">
+                <div class="inline-flex items-center gap-3 glass-card rounded-full px-6 py-3">
+                    <i class="fas fa-info-circle text-blue-500"></i>
+                    <span class="text-modern font-medium text-gray-700">تأكد من تسجيل الدخول بالحساب الصحيح</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,534 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block page_title %}البحث عن المؤثرين{% endblock %}
+
+{% block breadcrumb_items %}
+<li><a href="{% url 'dashboard:dashboard' %}">الصفحة الرئيسية</a></li>
+<li>البحث عن المؤثرين</li>
+{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+<!-- Search and Filters Section -->
+<div class="card bg-base-100 shadow-xl mb-8">
+    <div class="card-body">
+        <h2 class="card-title text-2xl mb-6">
+            <i class="fas fa-search text-primary"></i>
+            البحث والفلترة
+        </h2>
+        
+        <form method="GET" class="space-y-6">
+            <!-- Search Bar -->
+            <div class="form-control">
+                <div class="input-group">
+                    <input type="text" 
+                           name="search" 
+                           placeholder="ابحث عن المؤثرين..." 
+                           value="{{ request.GET.search }}"
+                           class="input input-bordered flex-1" />
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+                <!-- City Filter -->
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">المدينة</span>
+                    </label>
+                    <select name="city" class="select select-bordered">
+                        <option value="">جميع المدن</option>
+                        {% for city in cities %}
+                            <option value="{{ city }}" {% if filters.city == city %}selected{% endif %}>{{ city }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Gender Filter -->
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">الجنس</span>
+                    </label>
+                    <select name="gender" class="select select-bordered">
+                        <option value="">جميع الأجناس</option>
+                        <option value="male" {% if filters.gender == 'male' %}selected{% endif %}>ذكر</option>
+                        <option value="female" {% if filters.gender == 'female' %}selected{% endif %}>أنثى</option>
+                    </select>
+                </div>
+
+                <!-- Platform Filter -->
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">المنصة</span>
+                    </label>
+                    <select name="platform" class="select select-bordered">
+                        <option value="">جميع المنصات</option>
+                        {% for platform in platforms %}
+                            <option value="{{ platform }}" {% if filters.platform == platform %}selected{% endif %}>
+                                {% if platform == 'tiktok' %}تيك توك
+                                {% elif platform == 'instagram' %}إنستقرام
+                                {% elif platform == 'twitter' %}تويتر
+                                {% elif platform == 'youtube' %}يوتيوب
+                                {% else %}{{ platform|title }}{% endif %}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Followers Min -->
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">الحد الأدنى للمتابعين</span>
+                    </label>
+                    <input type="number" 
+                           name="followers_min" 
+                           placeholder="مثال: 1000"
+                           value="{{ filters.followers_min }}"
+                           class="input input-bordered" />
+                </div>
+
+                <!-- Followers Max -->
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">الحد الأقصى للمتابعين</span>
+                    </label>
+                    <input type="number" 
+                           name="followers_max" 
+                           placeholder="مثال: 100000"
+                           value="{{ filters.followers_max }}"
+                           class="input input-bordered" />
+                </div>
+
+                <!-- Sort By -->
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">ترتيب حسب</span>
+                    </label>
+                    <select name="sort_by" class="select select-bordered">
+                        <option value="id" {% if filters.sort_by == 'id' %}selected{% endif %}>الأحدث</option>
+                        <option value="followers_count" {% if filters.sort_by == 'followers_count' %}selected{% endif %}>عدد المتابعين</option>
+                        <option value="engagement_rate" {% if filters.sort_by == 'engagement_rate' %}selected{% endif %}>معدل التفاعل</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Filter Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-end">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-filter mr-2"></i>
+                    تطبيق الفلاتر
+                </button>
+                <a href="{% url 'influencers:influencers_search' %}" class="btn btn-ghost">
+                    <i class="fas fa-times mr-2"></i>
+                    مسح الفلاتر
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Results Section -->
+<div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+        <!-- Results Header -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+            <div class="flex items-center gap-4 mb-4 sm:mb-0">
+                <h2 class="card-title text-2xl">
+                    <i class="fas fa-users text-secondary"></i>
+                    نتائج البحث
+                </h2>
+                <div class="badge badge-primary badge-lg">{{ page_obj.paginator.count }} مؤثر</div>
+            </div>
+        </div>
+        
+        {% if page_obj %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for influencer in page_obj %}
+                <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 border border-base-300 influencer-card">
+                    <div class="card-body p-6">
+                        <!-- Profile Header -->
+                        <div class="flex items-start gap-4 mb-4">
+                            <div class="avatar">
+                                <div class="w-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 profile-image">
+                                    {% if influencer.avatar %}
+                                        <img src="{{ influencer.avatar }}" alt="{{ influencer.name }}" class="w-20 h-20 rounded-full object-cover">
+                                    {% else %}
+                                        <div class="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-secondary text-primary-content flex items-center justify-center">
+                                            <span class="text-2xl font-bold">{{ influencer.name|first|upper }}</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <h3 class="font-bold text-xl text-base-content">{{ influencer.name }}</h3>
+                                    {% for social_account in influencer.social_accounts %}
+                                        {% if social_account.is_verified %}
+                                            <div class="badge badge-primary badge-sm">
+                                                <i class="fas fa-check-circle text-xs"></i>
+                                                موثق
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <p class="text-base-content/70 text-sm mb-2">
+                                    <i class="fas fa-map-marker-alt mr-1"></i>
+                                    {{ influencer.city|default:"غير محدد" }}
+                                </p>
+                                {% if influencer.gender %}
+                                    <div class="badge badge-outline badge-primary badge-sm">
+                                        {% if influencer.gender == 'male' %}ذكر{% elif influencer.gender == 'female' %}أنثى{% endif %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Social Media Platforms -->
+                        <div class="space-y-3 mb-4">
+                            <h4 class="text-sm font-semibold text-base-content/70 mb-2">حسابات السوشل ميديا</h4>
+                            
+                            {% for social_account in influencer.social_accounts %}
+                                <div class="flex items-center justify-between p-3 bg-base-200/50 rounded-lg hover:bg-base-200 transition-colors social-platform-item">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full flex items-center justify-center
+                                            {% if social_account.platform == 'tiktok' %}bg-black
+                                            {% elif social_account.platform == 'instagram' %}bg-gradient-to-r from-purple-500 to-pink-500
+                                            {% elif social_account.platform == 'twitter' %}bg-blue-500
+                                            {% elif social_account.platform == 'youtube' %}bg-red-600
+                                            {% else %}bg-gray-500{% endif %}">
+                                            {% if social_account.platform == 'tiktok' %}
+                                                <i class="fab fa-tiktok text-white text-sm"></i>
+                                            {% elif social_account.platform == 'instagram' %}
+                                                <i class="fab fa-instagram text-white text-sm"></i>
+                                            {% elif social_account.platform == 'twitter' %}
+                                                <i class="fab fa-twitter text-white text-sm"></i>
+                                            {% elif social_account.platform == 'youtube' %}
+                                                <i class="fab fa-youtube text-white text-sm"></i>
+                                            {% else %}
+                                                <i class="fas fa-globe text-white text-sm"></i>
+                                            {% endif %}
+                                        </div>
+                                        <span class="font-medium text-sm">
+                                            {% if social_account.platform == 'tiktok' %}تيك توك
+                                            {% elif social_account.platform == 'instagram' %}إنستقرام
+                                            {% elif social_account.platform == 'twitter' %}تويتر
+                                            {% elif social_account.platform == 'youtube' %}يوتيوب
+                                            {% else %}{{ social_account.platform|title }}{% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="text-left">
+                                        <div class="text-xs text-base-content/60">@{{ social_account.username }}</div>
+                                        <div class="text-sm font-semibold">{{ social_account.followers_count|floatformat:0 }}</div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-xs text-base-content/60">معدل التفاعل</div>
+                                        <div class="text-sm font-semibold text-primary">{{ social_account.engagement_rate_account|floatformat:1 }}%</div>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <div class="text-center py-4 text-base-content/50">
+                                    <i class="fas fa-info-circle mr-2"></i>
+                                    لا توجد حسابات سوشال ميديا
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Card Actions -->
+                        <div class="card-actions justify-between items-center pt-4 border-t border-base-300">
+                            <div class="text-sm text-base-content/60">
+                                <i class="fas fa-calendar mr-1"></i>
+                                انضم: {{ influencer.created_at|date:"Y/m/d" }}
+                            </div>
+                            <div class="flex gap-2">
+                                <button class="btn btn-secondary btn-sm" 
+                                        data-influencer-id="{{ influencer.id }}" 
+                                        data-influencer-name="{{ influencer.name|escapejs }}"
+                                        onclick="showCampaignModal(this.dataset.influencerId, this.dataset.influencerName)">
+                                    <i class="fas fa-plus mr-1"></i>
+                                    إضافة لحملة
+                                </button>
+                                <a href="{% url 'influencers:influencer_detail' influencer.id %}" 
+                                   class="btn btn-primary btn-sm">
+                                    عرض التفاصيل
+                                    <i class="fas fa-arrow-left mr-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if page_obj.has_other_pages %}
+                <div class="flex justify-center mt-8">
+                    <div class="btn-group">
+                        {% if page_obj.has_previous %}
+                            <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page=1" 
+                               class="btn btn-sm">الأولى</a>
+                            <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}" 
+                               class="btn btn-sm">السابقة</a>
+                        {% endif %}
+                        
+                        <span class="btn btn-sm btn-active">
+                            صفحة {{ page_obj.number }} من {{ page_obj.paginator.num_pages }}
+                        </span>
+                        
+                        {% if page_obj.has_next %}
+                            <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}" 
+                               class="btn btn-sm">التالية</a>
+                            <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.paginator.num_pages }}" 
+                               class="btn btn-sm">الأخيرة</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+
+        {% else %}
+            <!-- No Results -->
+            <div class="text-center py-12">
+                <i class="fas fa-search text-6xl text-base-content/30 mb-4"></i>
+                <h3 class="text-xl font-semibold mb-2">لا توجد نتائج</h3>
+                <p class="text-base-content/70 mb-6">لم نجد مؤثرين يطابقون معايير البحث الخاصة بك</p>
+                <a href="{% url 'influencers:influencers_search' %}" class="btn btn-primary">
+                    <i class="fas fa-refresh mr-2"></i>
+                    عرض جميع المؤثرين
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+
+<!-- Campaign Selection Modal -->
+<div id="campaignModal" class="modal">
+    <div class="modal-box max-w-2xl">
+        <h3 class="font-bold text-lg mb-4" id="modalTitle">اختيار الحملة</h3>
+        <div id="modalContent">
+            <div class="mb-4">
+                <p class="text-base-content/70">اختر الحملة التي تريد إضافة <span id="influencerName" class="font-semibold"></span> إليها:</p>
+            </div>
+            <div id="campaignsList" class="space-y-3 max-h-64 overflow-y-auto">
+                <!-- Campaigns will be loaded here -->
+            </div>
+        </div>
+        <div class="modal-action">
+            <button class="btn" onclick="closeCampaignModal()">إلغاء</button>
+        </div>
+    </div>
+</div>
+
+
+<dialog id="successModal" class="modal">
+  <form method="dialog" class="modal-box">
+    <h3 class="font-bold text-lg">✅ تم إضافة المؤثر!</h3>
+    <p class="py-4" id="successModalMessage">تمت إضافة المؤثر إلى الحملة بنجاح.</p>
+    <div class="modal-action">
+      <button class="btn btn-primary">حسناً</button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+let currentInfluencerId = null;
+
+
+function showCampaignModal(influencerId, influencerName) {
+    console.log('Opening campaign modal for:', { influencerId, influencerName });
+    
+    currentInfluencerId = influencerId;
+    document.getElementById('influencerName').textContent = influencerName;
+    
+    // عرض رسالة تحميل
+    const campaignsList = document.getElementById('campaignsList');
+    campaignsList.innerHTML = `
+        <div class="text-center py-8">
+            <i class="fas fa-spinner fa-spin text-4xl text-primary mb-4"></i>
+            <p class="text-base-content/60">جاري تحميل الحملات...</p>
+        </div>
+    `;
+    
+    // فتح Modal أولاً
+    const modal = document.getElementById('campaignModal');
+    if (modal.showModal) {
+        modal.showModal();
+    } else {
+        modal.style.display = 'block';
+        modal.classList.add('modal-open');
+        modal.onclick = function(event) {
+            if (event.target === modal) {
+                closeCampaignModal();
+            }
+        };
+    }
+    
+    // جلب الحملات الحقيقية من API
+    fetch('/campaigns/api/campaigns-list/')
+        .then(response => {
+            console.log('Campaigns API response:', response);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Campaigns data:', data);
+            
+            if (data.success && data.campaigns && data.campaigns.length > 0) {
+                campaignsList.innerHTML = data.campaigns.map(campaign => `
+                    <div class="card bg-base-200 shadow-lg">
+                        <div class="card-body p-4">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <h4 class="font-semibold">${campaign.title}</h4>
+                                    <p class="text-sm text-base-content/60">ID: ${campaign.id}</p>
+                                    <p class="text-xs text-base-content/40">${campaign.description || 'لا يوجد وصف'}</p>
+                                </div>
+                                <button onclick="addToCampaign(${campaign.id})" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-plus mr-1"></i>
+                                    إضافة
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                campaignsList.innerHTML = `
+                    <div class="text-center py-8">
+                        <i class="fas fa-bullhorn text-4xl text-base-content/30 mb-4"></i>
+                        <p class="text-base-content/60 mb-4">لا توجد حملات متاحة</p>
+                        <p class="text-sm text-base-content/40 mb-4">يجب إنشاء حملة أولاً لإضافة المؤثرين إليها</p>
+                        <a href="/campaigns/create/" class="btn btn-primary">
+                            <i class="fas fa-plus mr-2"></i>
+                            إنشاء حملة جديدة
+                        </a>
+                    </div>
+                `;
+            }
+        })
+        .catch(error => {
+            console.error('Error loading campaigns:', error);
+            campaignsList.innerHTML = `
+                <div class="alert alert-error">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    خطأ في جلب الحملات: ${error.message}
+                </div>
+            `;
+        });
+}
+
+function addToCampaign(campaignId) {
+    console.log('addToCampaign called with:', campaignId);
+    console.log('currentInfluencerId:', currentInfluencerId);
+    
+    if (!currentInfluencerId) {
+        alert('خطأ: لم يتم تحديد المؤثر');
+        return;
+    }
+    
+    // إظهار رسالة تحميل
+    const button = event.target;
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>جاري الإضافة...';
+    button.disabled = true;
+    
+    // الحصول على CSRF token
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+    console.log('CSRF token:', csrfToken ? 'Found' : 'Not found');
+    
+    if (!csrfToken) {
+        alert('خطأ في الأمان: لم يتم العثور على رمز CSRF');
+        button.innerHTML = originalText;
+        button.disabled = false;
+        return;
+    }
+    
+    // إرسال طلب لإضافة المؤثر للحملة
+    const url = `/campaigns/api/${campaignId}/add-participant/`;
+    console.log('Sending request to:', url);
+    console.log('Request data:', { influencer_id: currentInfluencerId });
+    console.log('Note: System will accept all influencers regardless of active status');
+    
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify({
+            influencer_id: currentInfluencerId
+        })
+    })
+    .then(response => {
+        console.log('Response status:', response.status);
+        console.log('Response ok:', response.ok);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        return response.json();
+    })
+.then(data => {
+    // إعادة تعيين الزر
+    button.innerHTML = originalText;
+    button.disabled = false;
+
+    if (data.success) {
+        // عرض الرسالة في الـ Modal
+        const modal = document.getElementById('successModal');
+        const message = document.getElementById('successModalMessage');
+        message.textContent = `تم إضافة المؤثر ${data.influencer_name} إلى الحملة بنجاح!`;
+        if (modal.showModal) {
+            modal.showModal();
+        } else {
+            modal.style.display = 'block';
+            modal.classList.add('modal-open');
+        }
+    } else {
+        alert(`❌ خطأ: ${data.error || 'فشل في إضافة المؤثر للحملة'}`);
+    }
+})
+}
+
+function closeCampaignModal() {
+    const modal = document.getElementById('campaignModal');
+    if (modal.close) {
+        modal.close();
+    } else {
+        // fallback للمتصفحات التي لا تدعم close
+        modal.style.display = 'none';
+        modal.classList.remove('modal-open');
+    }
+    currentInfluencerId = null;
+}
+</script>
+
+<style>
+/* Modal fallback styles */
+.modal-open {
+    display: block !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.modal-open .modal-box {
+    position: relative;
+    margin: 5% auto;
+    background: white;
+    border-radius: 8px;
+    max-width: 500px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+</style>
+
+{% endblock %}

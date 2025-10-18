@@ -1,0 +1,90 @@
+{% extends 'main/base.html' %}
+
+{% block title %}500 - خطأ في الخادم | منصة التأثير الرقمي{% endblock %}
+
+{% block content %}
+<!-- Error 500 Section -->
+<section class="min-h-screen flex items-center justify-center section-bg-1 relative overflow-hidden">
+    <!-- Background Elements -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="floating-element top-20 left-10 w-20 h-20 bg-red-400 rounded-full blur-xl opacity-20"></div>
+        <div class="floating-element top-40 right-20 w-16 h-16 bg-orange-400 rounded-full blur-xl opacity-20"></div>
+        <div class="floating-element bottom-40 left-20 w-24 h-24 bg-yellow-400 rounded-full blur-xl opacity-20"></div>
+        <div class="floating-element bottom-20 right-10 w-18 h-18 bg-red-500 rounded-full blur-xl opacity-20"></div>
+    </div>
+    
+    <div class="container mx-auto px-4 text-center relative z-10">
+        <div class="max-w-4xl mx-auto">
+            <!-- Error Number -->
+            <div class="mb-8" data-aos="fade-up">
+                <h1 class="text-8xl sm:text-9xl lg:text-[12rem] font-bold opacity-20" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                    500
+                </h1>
+            </div>
+            
+            <!-- Error Icon -->
+            <div class="mb-8" data-aos="fade-up" data-aos-delay="200">
+                <div class="w-32 h-32 rounded-full flex items-center justify-center mx-auto shadow-2xl" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+                    <i class="fas fa-exclamation-triangle text-white text-5xl"></i>
+                </div>
+            </div>
+            
+            <!-- Error Title -->
+            <div class="mb-6" data-aos="fade-up" data-aos-delay="400">
+                <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-arabic mb-4" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                    خطأ في الخادم
+                </h2>
+                <p class="text-xl sm:text-2xl text-gray-600 text-modern">
+                    حدث خطأ غير متوقع في الخادم
+                </p>
+            </div>
+            
+            <!-- Error Description -->
+            <div class="mb-12" data-aos="fade-up" data-aos-delay="600">
+                <p class="text-lg text-gray-500 text-modern max-w-2xl mx-auto leading-relaxed">
+                    نعتذر عن هذا الخطأ. فريقنا التقني يعمل على إصلاح المشكلة. 
+                    يرجى المحاولة مرة أخرى بعد قليل أو التواصل معنا إذا استمرت المشكلة.
+                </p>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-6 justify-center items-center" data-aos="fade-up" data-aos-delay="800">
+                <a href="{% url 'main:home' %}" class="btn btn-primary text-white font-medium text-lg px-8 py-4">
+                    <i class="fas fa-home ml-2"></i>
+                    العودة للصفحة الرئيسية
+                </a>
+                <button onclick="location.reload()" class="btn btn-outline btn-lg text-modern font-medium border-2 border-gray-300 hover:border-gray-400">
+                    <i class="fas fa-redo ml-2"></i>
+                    إعادة تحميل الصفحة
+                </button>
+            </div>
+            
+            <!-- Contact Support -->
+            <div class="mt-16 max-w-md mx-auto" data-aos="fade-up" data-aos-delay="1000">
+                <div class="glass-card rounded-2xl p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 text-arabic">تحتاج مساعدة؟</h3>
+                    <p class="text-gray-600 text-modern mb-4">تواصل مع فريق الدعم التقني</p>
+                    <div class="flex gap-2">
+                        <a href="{% url 'main:home' %}#contact" class="btn btn-primary flex-1">
+                            <i class="fas fa-headset ml-2"></i>
+                            تواصل معنا
+                        </a>
+                        <a href="mailto:support@digital-impact.com" class="btn btn-outline">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Status Info -->
+            <div class="mt-12" data-aos="fade-up" data-aos-delay="1200">
+                <div class="inline-flex items-center gap-3 glass-card rounded-full px-6 py-3">
+                    <div class="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                    <span class="text-modern font-medium text-gray-700">نحن نعمل على إصلاح المشكلة</span>
+                    <i class="fas fa-tools text-gray-500"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,136 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block page_title %}إضافة مؤثر للحملة{% endblock %}
+
+{% block breadcrumb_items %}
+<li><a href="{% url 'dashboard:dashboard' %}">الصفحة الرئيسية</a></li>
+<li><a href="{% url 'campaigns:campaigns_list' %}">حملاتي</a></li>
+<li><a href="{% url 'campaigns:campaign_detail' campaign.id %}">{{ campaign.title }}</a></li>
+<li>إضافة مؤثر</li>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body p-8">
+            <h1 class="text-3xl font-bold mb-6">
+                <i class="fas fa-user-plus text-primary mr-3"></i>
+                إضافة مؤثر للحملة
+            </h1>
+            
+            <div class="alert alert-info mb-6">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                    <h4 class="font-bold">حملة: {{ campaign.title }}</h4>
+                    <p class="text-sm">العلامة التجارية: {{ campaign.brand }}</p>
+                </div>
+            </div>
+            
+            <form method="POST" class="space-y-6">
+                {% csrf_token %}
+                
+                <!-- Influencer Selection -->
+                <div class="space-y-4">
+                    <h2 class="text-xl font-semibold text-primary">اختيار المؤثر</h2>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">المؤثر *</span>
+                        </label>
+                        <select name="influencer_id" class="select select-bordered" required>
+                            <option value="">اختر المؤثر</option>
+                            {% for influencer in available_influencers %}
+                                <option value="{{ influencer.id }}">
+                                    {{ influencer.name }} - {{ influencer.city }} 
+                                    ({{ influencer.get_total_followers|floatformat:0 }} متابع)
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Campaign Details -->
+                <div class="space-y-4">
+                    <h2 class="text-xl font-semibold text-secondary">تفاصيل المشاركة</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">السعر المقترح *</span>
+                            </label>
+                            <input type="number" name="proposed_price" class="input input-bordered" required placeholder="5000" step="0.01">
+                        </div>
+                        
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">نوع المحتوى</span>
+                            </label>
+                            <select name="content_type" class="select select-bordered">
+                                <option value="">اختر نوع المحتوى</option>
+                                <option value="post">منشور</option>
+                                <option value="story">قصة</option>
+                                <option value="video">فيديو</option>
+                                <option value="reel">ريل</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">التسليمات المطلوبة *</span>
+                        </label>
+                        <textarea name="deliverables" class="textarea textarea-bordered h-32" required placeholder="اكتب تفاصيل ما تريد من المؤثر تسليمه..."></textarea>
+                    </div>
+                </div>
+                
+                <!-- Additional Information -->
+                <div class="space-y-4">
+                    <h2 class="text-xl font-semibold text-accent">معلومات إضافية</h2>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">ملاحظات إضافية</span>
+                        </label>
+                        <textarea name="notes" class="textarea textarea-bordered h-24" placeholder="أي ملاحظات إضافية..."></textarea>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex items-center gap-4 pt-6 border-t border-base-300">
+                    <a href="{% url 'campaigns:campaign_detail' campaign.id %}" class="btn btn-ghost">
+                        <i class="fas fa-arrow-right mr-2"></i>
+                        إلغاء
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-user-plus mr-2"></i>
+                        إضافة المؤثر
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Form validation
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const price = parseFloat(document.querySelector('input[name="proposed_price"]').value);
+        if (price <= 0) {
+            e.preventDefault();
+            alert('السعر المقترح يجب أن يكون أكبر من صفر');
+            return false;
+        }
+    });
+    
+    // Show influencer details when selected
+    document.querySelector('select[name="influencer_id"]').addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        if (selectedOption.value) {
+            // You can add logic here to show influencer details
+            console.log('Selected influencer:', selectedOption.text);
+        }
+    });
+</script>
+{% endblock %}

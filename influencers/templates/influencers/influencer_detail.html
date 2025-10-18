@@ -1,0 +1,242 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block page_title %}{{ influencer.name }} - تفاصيل المؤثر{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    {% if error_message %}
+        <div class="alert alert-warning mb-6">{{ error_message }}</div>
+    {% endif %}
+
+    {% if influencer %}
+    <div class="card bg-base-100 shadow-xl mb-8">
+        <div class="card-body p-8">
+            <!-- Influencer Info -->
+            <div class="flex items-start gap-8 mb-8">
+                <div class="avatar">
+                    <div class="w-32 rounded-full">
+                        {% if influencer.avatar %}
+                            <img src="{{ influencer.avatar }}" alt="{{ influencer.name }}">
+                        {% else %}
+                            <div class="w-32 h-32 bg-primary text-primary-content flex items-center justify-center">
+                                <span class="text-4xl font-bold">{{ influencer.name|first|upper }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <h1 class="text-4xl font-bold">{{ influencer.name }}</h1>
+                    <p class="text-xl text-base-content/70 mb-2">
+                        <i class="fas fa-map-marker-alt mr-2"></i>
+                        {{ influencer.city|default:"غير محدد" }}
+                    </p>
+                    {% if influencer.gender %}
+                        <div class="badge badge-primary">
+                            {% if influencer.gender == 'male' %}ذكر{% elif influencer.gender == 'female' %}أنثى{% endif %}
+                        </div>
+                    {% endif %}
+                    <p class="text-base-content/60 mt-4">
+                        <i class="fas fa-calendar mr-2"></i>
+                        انضم: {{ influencer.created_at|date:"Y/m/d" }}
+                    </p>
+                    {% if influencer.licence_number %}
+                        <p class="text-base-content/60">
+                            <i class="fas fa-id-card mr-2"></i>
+                            رقم الترخيص: {{ influencer.licence_number }}
+                        </p>
+                    {% endif %}
+
+                    <!-- Categories -->
+                    <p class="mt-4 font-semibold">التصنيفات:</p>
+                    <ul class="list-disc pl-6">
+                        {% for category in influencer.categories.all %}
+                            <li>{{ category.name }}</li>
+                        {% empty %}
+                            <li>لا توجد تصنيفات</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Social Accounts -->
+            <div class="grid grid-cols-1 gap-8">
+                {% for social_account in influencer.social_accounts.all %}
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <!-- Platform Header -->
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-16 h-16 rounded-full flex items-center justify-center
+                                {% if social_account.platform == 'tiktok' %}bg-black
+                                {% elif social_account.platform == 'instagram' %}bg-gradient-to-r from-purple-500 to-pink-500
+                                {% elif social_account.platform == 'twitter' %}bg-blue-500
+                                {% elif social_account.platform == 'youtube' %}bg-red-600
+                                {% else %}bg-gray-500{% endif %}">
+                                {% if social_account.platform == 'tiktok' %}
+                                    <i class="fab fa-tiktok text-white text-2xl"></i>
+                                {% elif social_account.platform == 'instagram' %}
+                                    <i class="fab fa-instagram text-white text-2xl"></i>
+                                {% elif social_account.platform == 'twitter' %}
+                                    <i class="fab fa-twitter text-white text-2xl"></i>
+                                {% elif social_account.platform == 'youtube' %}
+                                    <i class="fab fa-youtube text-white text-2xl"></i>
+                                {% else %}
+                                    <i class="fas fa-globe text-white text-2xl"></i>
+                                {% endif %}
+                            </div>
+                            <div class="flex-1">
+                                <h2 class="text-2xl font-bold">
+                                    {% if social_account.platform == 'tiktok' %}تيك توك
+                                    {% elif social_account.platform == 'instagram' %}إنستقرام
+                                    {% elif social_account.platform == 'twitter' %}تويتر
+                                    {% elif social_account.platform == 'youtube' %}يوتيوب
+                                    {% else %}{{ social_account.platform|title }}{% endif %}
+                                </h2>
+                                <p class="text-lg text-base-content/70">@{{ social_account.username }}</p>
+                                {% if social_account.is_verified %}
+                                    <div class="badge badge-primary badge-sm mt-1">
+                                        <i class="fas fa-check-circle mr-1"></i>
+                                        موثق
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="text-right">
+                                <a href="{% for platform in influencer.platforms %}{% if platform.name == social_account.platform %}{{ platform.url }}{% endif %}{% endfor %}" 
+                                   target="_blank" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-external-link-alt mr-2"></i>
+                                    زيارة الحساب
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Account Stats -->
+                        <div class="stats stats-horizontal shadow-lg mb-6">
+                            <div class="stat">
+                                <div class="stat-figure text-primary">
+                                    <i class="fas fa-users text-3xl"></i>
+                                </div>
+                                <div class="stat-title">المتابعين</div>
+                                <div class="stat-value text-primary">{{ social_account.followers_count|floatformat:0 }}</div>
+                                <div class="stat-desc">متابع</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-figure text-secondary">
+                                    <i class="fas fa-heart text-3xl"></i>
+                                </div>
+                                <div class="stat-title">معدل التفاعل</div>
+                                <div class="stat-value text-secondary">{{ social_account.engagement_rate_account|floatformat:1 }}%</div>
+                                <div class="stat-desc">متوسط التفاعل</div>
+                            </div>
+                        </div>
+
+                        <!-- Account Stats Details -->
+                        <div class="mb-6">
+                            <h4 class="font-bold">إحصائيات إضافية</h4>
+                            {% for stat in social_account.account_stats.all %}
+                                <ul class="list-disc pl-6">
+                                    <li>نسبة التفاعل: {{ stat.engagement_rate }}%</li>
+                                    <li>إجمالي الإعجابات آخر 10: {{ stat.total_likes_last_10 }}</li>
+                                    <li>إجمالي التعليقات آخر 10: {{ stat.total_comments_last_10 }}</li>
+                                    <li>إجمالي المشاهدات آخر 10: {{ stat.total_views_last_10 }}</li>
+                                    <li>تاريخ الإحصائية: {{ stat.created_at|date:"Y/m/d H:i" }}</li>
+                                </ul>
+                            {% empty %}
+                                <p>لا توجد إحصائيات إضافية</p>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Posts Section -->
+                        {% if social_account.posts %}
+                            <div class="mt-6">
+                                <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                                    <i class="fas fa-video text-primary"></i>
+                                    المنشورات ({{ social_account.posts|length }})
+                                </h3>
+                                
+                                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                                    {% for post in social_account.posts.all %}
+                                    <div class="card bg-base-200 shadow-lg hover:shadow-xl transition-all duration-300">
+                                        <div class="card-body p-3">
+                                            <!-- Video Preview -->
+                                            <div class="aspect-square bg-base-300 rounded-lg mb-3 flex items-center justify-center relative overflow-hidden">
+                                                <a href="{{ post.post_url }}" target="_blank" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity">
+                                                    <i class="fas fa-play text-white text-lg"></i>
+                                                </a>
+                                            </div>
+
+                                            <!-- Compact Stats -->
+                                            <div class="space-y-2">
+                                                <div class="flex justify-between items-center">
+                                                    <span class="text-xs font-semibold">إحصائيات</span>
+                                                    <div class="badge badge-primary badge-xs">{{ post.engagement_rate|floatformat:1 }}%</div>
+                                                </div>
+                                                <div class="grid grid-cols-2 gap-1 text-xs">
+                                                    <div class="text-center bg-base-100 rounded p-1">
+                                                        <div class="text-blue-500 font-bold">{{ post.views|floatformat:0 }}</div>
+                                                        <div class="text-gray-500 text-xs">مشاهدات</div>
+                                                    </div>
+                                                    <div class="text-center bg-base-100 rounded p-1">
+                                                        <div class="text-red-500 font-bold">{{ post.likes|floatformat:0 }}</div>
+                                                        <div class="text-gray-500 text-xs">إعجابات</div>
+                                                    </div>
+                                                    <div class="text-center bg-base-100 rounded p-1">
+                                                        <div class="text-green-500 font-bold">{{ post.comments|floatformat:0 }}</div>
+                                                        <div class="text-gray-500 text-xs">تعليقات</div>
+                                                    </div>
+                                                    <div class="text-center bg-base-100 rounded p-1">
+                                                        <div class="text-purple-500 font-bold">{{ post.share|floatformat:0 }}</div>
+                                                        <div class="text-gray-500 text-xs">مشاركات</div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Post Details -->
+                                                <div class="text-xs mt-2">
+                                                    <p>تحميل الفيديو: {{ post.download_vidC }}</p>
+                                                    <p>تاريخ النشر: {{ post.posted_at|date:"Y/m/d H:i"|default:"غير محدد" }}</p>
+                                                    <p>تم الإنشاء: {{ post.created_at|date:"Y/m/d H:i" }}</p>
+                                                </div>
+
+                                                <a href="{{ post.post_url }}" target="_blank" class="btn btn-primary btn-xs w-full">
+                                                    <i class="fas fa-external-link-alt mr-1"></i> عرض
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="text-center py-8">
+                                <i class="fas fa-video text-4xl text-base-content/30 mb-4"></i>
+                                <p class="text-base-content/60">لا توجد منشورات متاحة</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% else %}
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body text-center py-12">
+                <h3 class="text-xl font-semibold mb-2">المؤثر غير موجود</h3>
+                <a href="{% url 'influencers:influencers_search' %}" class="btn btn-primary">
+                    العودة للمؤثرين
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+function syncInfluencerData() {
+    const button = event.target;
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>جاري التحديث...';
+    button.disabled = true;
+    setTimeout(() => {
+        window.location.reload();
+    }, 2000);
+}
+</script>
+{% endblock %}

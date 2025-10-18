@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}لوحة التحكم - منصة المؤثرين{% endblock %}</title>
+    
+    <!-- TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- DaisyUI -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        /* RTL Support */
+        [dir="rtl"] {
+            text-align: right;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+        .disabled-link {
+            color: #888; /* لون رمادي */
+            cursor: not-allowed;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body class="bg-base-200" dir="rtl">
+    <!-- Drawer -->
+    <div class="drawer lg:drawer-open">
+        <input id="drawer-toggle" type="checkbox" class="drawer-toggle" />
+        
+        <!-- Page content -->
+        <div class="drawer-content flex flex-col">
+            <!-- Navbar -->
+            <div class="navbar bg-base-100 shadow-lg">
+                <div class="navbar-start">
+                    <label for="drawer-toggle" class="btn btn-square btn-ghost lg:hidden">
+                        <i class="fas fa-bars text-xl"></i>
+                    </label>
+                    <h1 class="btn btn-ghost text-xl">{% block page_title %}لوحة التحكم{% endblock %}</h1>
+                </div>
+                
+                <div class="navbar-center hidden lg:flex">
+                    {% block breadcrumb %}
+                    <div class="text-sm breadcrumbs">
+                        <ul>
+                            <li><a href="{% url 'dashboard:dashboard' %}">الصفحة الرئيسية</a></li>
+                            {% block breadcrumb_items %}{% endblock %}
+                        </ul>
+                    </div>
+                    {% endblock %}
+                </div>
+                
+                <div class="navbar-end">
+                    <!-- Notifications -->
+                    <div class="dropdown dropdown-end">
+                        <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
+                            <div class="indicator">
+                                <i class="fas fa-bell text-xl"></i>
+                                <span class="badge badge-xs badge-primary indicator-item"></span>
+                            </div>
+                        </div>
+                        <div tabindex="0" class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
+                            <li><a>إشعار 1</a></li>
+                            <li><a>إشعار 2</a></li>
+                        </div>
+                    </div>
+                    
+                    <!-- User Menu -->
+                    <div class="dropdown dropdown-end">
+                        <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                            <div class="w-10 rounded-full bg-primary text-primary-content flex items-center justify-center">
+                                <img src="{% static 'img/profile/1.jpg' %}" />
+                            </div>
+                        </div>
+                        <ul tabindex="0" class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
+                            <li><a href="{% url 'dashboard:profile' %}">الملف الشخصي</a></li>
+                            <li><a href="{% url 'authentication:logout' %}" class="text-error">تسجيل الخروج</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main content -->
+            <main class="flex-1 p-6">
+                {% block content %}
+                {% endblock %}
+            </main>
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="drawer-side">
+            <label for="drawer-toggle" aria-label="close sidebar" class="drawer-overlay"></label>
+            <aside class="min-h-full w-64 bg-base-100 shadow-xl">
+                <!-- User Info -->
+                <div class="p-4 border-b border-base-300">
+                    <div class="flex items-center gap-3">
+                        <div class="avatar">
+                            <div class="w-12 rounded-full bg-primary text-primary-content flex items-center justify-center">
+                                <img src="{% static 'img/profile/1.jpg' %}" />
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold">{{ user.full_name }}</h3>
+                            <p class="text-xs text-base-content/70">{{ user.email }}</p>
+                            {% if user.package %}
+                                <div class="badge badge-sm badge-primary mt-1">
+                                    {% if user.package == 'free_trial' %}تجربة مجانية{% elif user.package == 'monthly' %}شهري{% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Navigation Menu -->
+                <ul class="menu p-4 w-full text-base-content">
+                    <li>
+                        <a href="{% url 'dashboard:dashboard' %}" 
+                           class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                            <i class="fas fa-home"></i>
+                            الصفحة الرئيسية
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="{% url 'influencers:influencers_search' %}" 
+                           class="{% if 'influencer' in request.resolver_match.url_name %}active{% endif %}">
+                            <i class="fas fa-users"></i>
+                            البحث عن المؤثرين
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="{% url 'campaigns:campaigns_list' %}" 
+                           class="{% if 'campaign' in request.resolver_match.url_name %}active{% endif %}">
+                            <i class="fas fa-bullhorn"></i>
+                            حملاتي
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <span class="disabled-link">
+                            <i class="fas fa-chart-bar"></i>
+                            التقارير والإحصائيات (قريبا)
+                        </span>
+                    </li>
+
+                    <li>
+                        <a href="" 
+                           class="{% if 'Support' in request.resolver_match.url_name %}active{% endif %}">
+                            <i class="fas fa-circle-info"></i>
+                            التواصل مع الدعم 
+                        </a>
+                    </li>
+                </ul>
+                
+                <!-- Footer -->
+                <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-base-300">
+                    <a href="{% url 'authentication:logout' %}" class="btn btn-error btn-sm w-full">
+                        <i class="fas fa-sign-out-alt"></i>
+                        تسجيل الخروج
+                    </a>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+        <div class="toast toast-top toast-end">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags|default:'info' }}">
+                    <span>{{ message }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- JavaScript -->
+    <script>
+        // Auto-hide messages after 5 seconds
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.toast .alert');
+            alerts.forEach(alert => {
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 300);
+            });
+        }, 5000);
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

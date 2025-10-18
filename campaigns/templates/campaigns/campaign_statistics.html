@@ -1,0 +1,520 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block page_title %}إحصائيات الحملة{% endblock %}
+
+{% block breadcrumb_items %}
+<li><a href="{% url 'dashboard:dashboard' %}">الصفحة الرئيسية</a></li>
+<li><a href="{% url 'campaigns:campaigns_list' %}">حملاتي</a></li>
+<li><a href="{% url 'campaigns:campaign_detail' campaign.id %}">{{ campaign.title }}</a></li>
+<li>إحصائيات الحملة</li>
+{% endblock %}
+
+{% block content %}
+<!-- Campaign Header -->
+<div class="card bg-base-100 shadow-xl mb-8">
+    <div class="card-body">
+        <div class="flex flex-col lg:flex-row items-start justify-between gap-6">
+            <div class="flex-1">
+                <div class="flex items-center gap-3 mb-4">
+                    <h1 class="text-3xl font-bold">
+                        <i class="fas fa-chart-line text-primary mr-3"></i>
+                        إحصائيات الحملة
+                    </h1>
+                    {% if campaign.status == 'active' %}
+                        <div class="badge badge-success badge-lg">نشطة</div>
+                    {% elif campaign.status == 'draft' %}
+                        <div class="badge badge-neutral badge-lg">مسودة</div>
+                    {% elif campaign.status == 'paused' %}
+                        <div class="badge badge-warning badge-lg">متوقفة</div>
+                    {% elif campaign.status == 'completed' %}
+                        <div class="badge badge-info badge-lg">مكتملة</div>
+                    {% elif campaign.status == 'cancelled' %}
+                        <div class="badge badge-error badge-lg">ملغاة</div>
+                    {% endif %}
+                </div>
+                <p class="text-lg text-base-content/70">{{ campaign.title }} - {{ campaign.brand }}</p>
+            </div>
+            
+            <!-- Campaign Actions -->
+            <div class="flex items-center gap-3">
+                <a href="{% url 'campaigns:campaign_detail' campaign.id %}" class="btn btn-primary btn-sm">
+                    <i class="fas fa-eye mr-2"></i>
+                    عرض التفاصيل
+                </a>
+                <a href="{% url 'campaigns:edit_campaign' campaign.id %}" class="btn btn-info btn-sm">
+                    <i class="fas fa-edit mr-2"></i>
+                    تعديل الحملة
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Statistics Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Main Content -->
+    <div class="lg:col-span-2 space-y-6">
+        <!-- Key Performance Indicators -->
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title text-2xl mb-6">
+                    <i class="fas fa-tachometer-alt text-primary"></i>
+                    مؤشرات الأداء الرئيسية
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Total Participants -->
+                    <div class="stat bg-primary/10 rounded-box p-4">
+                        <div class="stat-figure text-primary">
+                            <i class="fas fa-users text-3xl"></i>
+                        </div>
+                        <div class="stat-title">إجمالي المشاركين</div>
+                        <div class="stat-value text-primary">{{ total_participants }}</div>
+                        <div class="stat-desc">مؤثر في الحملة</div>
+                    </div>
+                    
+                    <!-- Accepted Participants -->
+                    <div class="stat bg-success/10 rounded-box p-4">
+                        <div class="stat-figure text-success">
+                            <i class="fas fa-check-circle text-3xl"></i>
+                        </div>
+                        <div class="stat-title">المقبولون</div>
+                        <div class="stat-value text-success">{{ accepted_participants }}</div>
+                        <div class="stat-desc">{{ acceptance_rate }}% من إجمالي المشاركين</div>
+                    </div>
+                    
+                    <!-- Total Budget -->
+                    <div class="stat bg-secondary/10 rounded-box p-4">
+                        <div class="stat-figure text-secondary">
+                            <i class="fas fa-money-bill-wave text-3xl"></i>
+                        </div>
+                        <div class="stat-title">إجمالي الميزانية</div>
+                        <div class="stat-value text-secondary">{{ campaign.budget|floatformat:0 }}</div>
+                        <div class="stat-desc">ريال سعودي</div>
+                    </div>
+                    
+                    <!-- Spent Budget -->
+                    <div class="stat bg-accent/10 rounded-box p-4">
+                        <div class="stat-figure text-accent">
+                            <i class="fas fa-coins text-3xl"></i>
+                        </div>
+                        <div class="stat-title">المبلغ المنفق</div>
+                        <div class="stat-value text-accent">{{ spent_budget|floatformat:0 }}</div>
+                        <div class="stat-desc">{{ budget_utilization }}% من الميزانية</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Campaign Performance -->
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title text-2xl mb-6">
+                    <i class="fas fa-chart-bar text-primary"></i>
+                    أداء الحملة
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Engagement Stats -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold text-primary">إحصائيات التفاعل</h3>
+                        
+                        <div class="stats stats-vertical shadow-sm">
+                            <div class="stat">
+                                <div class="stat-figure text-primary">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                                <div class="stat-title">إجمالي الإعجابات</div>
+                                <div class="stat-value text-primary">{{ total_likes|floatformat:0 }}</div>
+                                <div class="stat-desc">من جميع المشاركين</div>
+                            </div>
+                            
+                            <div class="stat">
+                                <div class="stat-figure text-secondary">
+                                    <i class="fas fa-comment"></i>
+                                </div>
+                                <div class="stat-title">إجمالي التعليقات</div>
+                                <div class="stat-value text-secondary">{{ total_comments|floatformat:0 }}</div>
+                                <div class="stat-desc">تفاعل الجمهور</div>
+                            </div>
+                            
+                            <div class="stat">
+                                <div class="stat-figure text-accent">
+                                    <i class="fas fa-share"></i>
+                                </div>
+                                <div class="stat-title">إجمالي المشاركات</div>
+                                <div class="stat-value text-accent">{{ total_shares|floatformat:0 }}</div>
+                                <div class="stat-desc">مشاركات ومشاركات</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Reach Stats -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold text-secondary">إحصائيات الوصول</h3>
+                        
+                        <div class="stats stats-vertical shadow-sm">
+                            <div class="stat">
+                                <div class="stat-figure text-primary">
+                                    <i class="fas fa-eye"></i>
+                                </div>
+                                <div class="stat-title">إجمالي المشاهدات</div>
+                                <div class="stat-value text-primary">{{ total_views|floatformat:0 }}</div>
+                                <div class="stat-desc">مشاهدات المحتوى</div>
+                            </div>
+                            
+                            <div class="stat">
+                                <div class="stat-figure text-secondary">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="stat-title">إجمالي المتابعين</div>
+                                <div class="stat-value text-secondary">{{ total_followers|floatformat:0 }}</div>
+                                <div class="stat-desc">متابعي المؤثرين</div>
+                            </div>
+                            
+                            <div class="stat">
+                                <div class="stat-figure text-accent">
+                                    <i class="fas fa-percentage"></i>
+                                </div>
+                                <div class="stat-title">معدل التفاعل</div>
+                                <div class="stat-value text-accent">{{ avg_engagement_rate }}%</div>
+                                <div class="stat-desc">متوسط التفاعل</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Participants Performance -->
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title text-2xl mb-6">
+                    <i class="fas fa-trophy text-primary"></i>
+                    أداء المشاركين
+                </h2>
+                
+                {% if participants %}
+                    <div class="overflow-x-auto">
+                        <table class="table table-zebra">
+                            <thead>
+                                <tr>
+                                    <th>المؤثر</th>
+                                    <th>الحالة</th>
+                                    <th>المتابعين</th>
+                                    <th>التفاعل</th>
+                                    <th>الإعجابات</th>
+                                    <th>التعليقات</th>
+                                    <th>المشاركات</th>
+                                    <th>السعر</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for participant in participants %}
+                                <tr class="hover">
+                                    <td>
+                                        <div class="flex items-center gap-3">
+                                            <div class="avatar">
+                                                <div class="w-8 rounded-full bg-primary text-primary-content flex items-center justify-center">
+                                                    <span class="text-xs font-bold">{{ participant.influencer.name|first|upper }}</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="font-bold">{{ participant.influencer.name }}</div>
+                                                <div class="text-sm text-base-content/70">{{ participant.influencer.city }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {% if participant.status == 'pending' %}
+                                            <div class="badge badge-warning">في الانتظار</div>
+                                        {% elif participant.status == 'accepted' %}
+                                            <div class="badge badge-success">مقبول</div>
+                                        {% elif participant.status == 'rejected' %}
+                                            <div class="badge badge-error">مرفوض</div>
+                                        {% elif participant.status == 'completed' %}
+                                            <div class="badge badge-info">مكتمل</div>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="font-bold">{{ participant.influencer.get_total_followers|floatformat:0 }}</div>
+                                    </td>
+                                    <td>
+                                        <div class="font-bold text-accent">{{ participant.influencer.tiktok_engagement_rate }}%</div>
+                                    </td>
+                                    <td>
+                                        <div class="font-bold text-primary">{{ participant.likes|default:0|floatformat:0 }}</div>
+                                    </td>
+                                    <td>
+                                        <div class="font-bold text-secondary">{{ participant.comments|default:0|floatformat:0 }}</div>
+                                    </td>
+                                    <td>
+                                        <div class="font-bold text-accent">{{ participant.shares|default:0|floatformat:0 }}</div>
+                                    </td>
+                                    <td>
+                                        <div class="font-bold text-success">{{ participant.proposed_price|floatformat:0 }} ريال</div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-8">
+                        <i class="fas fa-users text-4xl text-base-content/30 mb-4"></i>
+                        <h3 class="text-lg font-semibold mb-2">لا يوجد مشاركون بعد</h3>
+                        <p class="text-base-content/70">ابدأ بدعوة المؤثرين للمشاركة في حملتك</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="lg:col-span-1 space-y-6">
+        <!-- Campaign Progress -->
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h3 class="card-title mb-4">
+                    <i class="fas fa-chart-pie text-primary"></i>
+                    تقدم الحملة
+                </h3>
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium">المدة المنقضية</span>
+                            <span class="text-sm font-bold">{{ campaign.days_remaining }} يوم متبقي</span>
+                        </div>
+                        <progress class="progress progress-primary w-full" value="{{ campaign_progress }}" max="100"></progress>
+                    </div>
+                    
+                    <div class="divider"></div>
+                    
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm">تاريخ البداية</span>
+                            <span class="text-sm font-bold">{{ campaign.start_date|date:"Y/m/d" }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm">تاريخ النهاية</span>
+                            <span class="text-sm font-bold">{{ campaign.end_date|date:"Y/m/d" }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm">نوع الحملة</span>
+                            <span class="text-sm font-bold">{{ campaign.get_campaign_type_display }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Budget Breakdown -->
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h3 class="card-title mb-4">
+                    <i class="fas fa-pie-chart text-secondary"></i>
+                    توزيع الميزانية
+                </h3>
+                
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm">الميزانية الإجمالية</span>
+                        <span class="text-sm font-bold text-secondary">{{ campaign.budget|floatformat:0 }} ريال</span>
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm">المبلغ المنفق</span>
+                        <span class="text-sm font-bold text-accent">{{ spent_budget|floatformat:0 }} ريال</span>
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm">المبلغ المتبقي</span>
+                        <span class="text-sm font-bold text-primary">{{ remaining_budget|floatformat:0 }} ريال</span>
+                    </div>
+                    
+                    <div class="divider"></div>
+                    
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm font-medium">استخدام الميزانية</span>
+                            <span class="text-sm font-bold">{{ budget_utilization }}%</span>
+                        </div>
+                        <progress class="progress progress-secondary w-full" value="{{ budget_utilization }}" max="100"></progress>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h3 class="card-title mb-4">
+                    <i class="fas fa-bolt text-accent"></i>
+                    إجراءات سريعة
+                </h3>
+                
+                <div class="space-y-3">
+                    <a href="{% url 'campaigns:add_participant' campaign.id %}" class="btn btn-primary btn-sm w-full">
+                        <i class="fas fa-user-plus mr-2"></i>
+                        إضافة مؤثر جديد
+                    </a>
+                    
+                    <a href="{% url 'campaigns:edit_campaign' campaign.id %}" class="btn btn-info btn-sm w-full">
+                        <i class="fas fa-edit mr-2"></i>
+                        تعديل الحملة
+                    </a>
+                    
+                    <button class="btn btn-success btn-sm w-full" onclick="exportStatistics()">
+                        <i class="fas fa-download mr-2"></i>
+                        تصدير الإحصائيات
+                    </button>
+                    
+                    <button class="btn btn-warning btn-sm w-full" onclick="shareStatistics()">
+                        <i class="fas fa-share mr-2"></i>
+                        مشاركة التقرير
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Campaign Summary -->
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h3 class="card-title mb-4">
+                    <i class="fas fa-clipboard-list text-primary"></i>
+                    ملخص الحملة
+                </h3>
+                
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm">الجمهور المستهدف</span>
+                        <span class="text-sm font-bold">{{ campaign.target_audience|truncatewords:3 }}</span>
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm">تاريخ الإنشاء</span>
+                        <span class="text-sm font-bold">{{ campaign.created_at|date:"Y/m/d" }}</span>
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm">آخر تحديث</span>
+                        <span class="text-sm font-bold">{{ campaign.updated_at|date:"Y/m/d" }}</span>
+                    </div>
+                    
+                    <div class="divider"></div>
+                    
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-primary mb-1">{{ campaign_roi }}%</div>
+                        <div class="text-sm text-base-content/70">عائد الاستثمار</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Export statistics function
+    function exportStatistics() {
+        // Create a simple CSV export
+        const data = [
+            ['المؤشر', 'القيمة'],
+            ['إجمالي المشاركين', '{{ total_participants }}'],
+            ['المقبولون', '{{ accepted_participants }}'],
+            ['معدل القبول', '{{ acceptance_rate }}%'],
+            ['إجمالي الميزانية', '{{ campaign.budget }}'],
+            ['المبلغ المنفق', '{{ spent_budget }}'],
+            ['إجمالي الإعجابات', '{{ total_likes }}'],
+            ['إجمالي التعليقات', '{{ total_comments }}'],
+            ['إجمالي المشاركات', '{{ total_shares }}'],
+            ['إجمالي المشاهدات', '{{ total_views }}'],
+            ['معدل التفاعل', '{{ avg_engagement_rate }}%'],
+            ['عائد الاستثمار', '{{ campaign_roi }}%']
+        ];
+        
+        const csvContent = data.map(row => row.join(',')).join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'campaign_statistics_{{ campaign.id }}.csv');
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+    
+    // Share statistics function
+    function shareStatistics() {
+        const shareText = `إحصائيات حملة {{ campaign.title }}:\n` +
+                         `• إجمالي المشاركين: {{ total_participants }}\n` +
+                         `• المقبولون: {{ accepted_participants }}\n` +
+                         `• إجمالي الإعجابات: {{ total_likes }}\n` +
+                         `• إجمالي التعليقات: {{ total_comments }}\n` +
+                         `• معدل التفاعل: {{ avg_engagement_rate }}%\n` +
+                         `• عائد الاستثمار: {{ campaign_roi }}%`;
+        
+        if (navigator.share) {
+            navigator.share({
+                title: 'إحصائيات الحملة',
+                text: shareText
+            });
+        } else {
+            // Fallback to clipboard
+            navigator.clipboard.writeText(shareText).then(() => {
+                alert('تم نسخ الإحصائيات إلى الحافظة');
+            });
+        }
+    }
+    
+    // Add smooth animations
+    document.addEventListener('DOMContentLoaded', function() {
+        const cards = document.querySelectorAll('.card');
+        cards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+            card.classList.add('fade-in');
+        });
+        
+        // Animate progress bars
+        const progressBars = document.querySelectorAll('.progress');
+        progressBars.forEach(bar => {
+            const value = bar.getAttribute('value');
+            bar.style.width = '0%';
+            setTimeout(() => {
+                bar.style.width = value + '%';
+            }, 500);
+        });
+    });
+</script>
+
+<style>
+    .fade-in {
+        animation: fadeIn 0.6s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .progress {
+        transition: width 1s ease-in-out;
+    }
+    
+    .stat {
+        transition: transform 0.2s ease-in-out;
+    }
+    
+    .stat:hover {
+        transform: translateY(-2px);
+    }
+</style>
+{% endblock %}

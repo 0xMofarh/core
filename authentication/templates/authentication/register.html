@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}إنشاء حساب جديد - منصة تأثير رقمي{% endblock %}
+
+{% block content %}
+    <!-- Logo and Title -->
+    <div class="text-center mb-6">
+        <div class="flex justify-center mb-4">
+            <div class="avatar placeholder">
+                <div class="bg-primary text-primary-content rounded-full w-16 h-16">
+                    <i class="fas fa-user-plus text-2xl"></i>
+                </div>
+            </div>
+        </div>
+        <h1 class="text-2xl font-bold mb-1">إنشاء حساب جديد</h1>
+        <p class="text-sm text-base-content/60">انضم إلى منصة تأثير رقمي وابدأ رحلتك</p>
+    </div>
+
+    <!-- Registration Form -->
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+        
+        <!-- Full Name Field -->
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">الاسم الكامل</span>
+            </label>
+            <label class="input input-bordered flex items-center gap-2">
+                <i class="fas fa-user text-base-content/50"></i>
+                <input 
+                    type="text" 
+                    name="full_name"
+                    class="grow" 
+                    placeholder="أدخل اسمك الكامل"
+                    required
+                    autocomplete="name"
+                />
+            </label>
+        </div>
+
+        <!-- Email Field -->
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">البريد الإلكتروني</span>
+            </label>
+            <label class="input input-bordered flex items-center gap-2">
+                <i class="fas fa-envelope text-base-content/50"></i>
+                <input 
+                    type="email" 
+                    name="email"
+                    class="grow" 
+                    placeholder="example@email.com"
+                    required
+                    autocomplete="email"
+                />
+            </label>
+        </div>
+
+        <!-- Mobile Number Field -->
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">رقم الهاتف</span>
+            </label>
+            <label class="input input-bordered flex items-center gap-2">
+                <i class="fas fa-phone text-base-content/50"></i>
+                <input 
+                    type="tel" 
+                    name="mobile_number"
+                    class="grow" 
+                    placeholder="05xxxxxxxx"
+                    required
+                    autocomplete="tel"
+                />
+            </label>
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">كلمة المرور</span>
+                <span class="label-text-alt text-base-content/50">6 أحرف على الأقل</span>
+            </label>
+            <label class="input input-bordered flex items-center gap-2">
+                <i class="fas fa-lock text-base-content/50"></i>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password"
+                    class="grow" 
+                    placeholder="••••••••"
+                    required
+                    minlength="6"
+                    autocomplete="new-password"
+                />
+                <button type="button" onclick="togglePassword('password', 'eye-icon-1')" class="btn btn-ghost btn-xs btn-circle">
+                    <i id="eye-icon-1" class="fas fa-eye text-base-content/50"></i>
+                </button>
+            </label>
+        </div>
+
+        <!-- Confirm Password Field -->
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">تأكيد كلمة المرور</span>
+            </label>
+            <label class="input input-bordered flex items-center gap-2">
+                <i class="fas fa-lock text-base-content/50"></i>
+                <input 
+                    type="password" 
+                    id="password_confirm" 
+                    name="password_confirm"
+                    class="grow" 
+                    placeholder="••••••••"
+                    required
+                    minlength="6"
+                    autocomplete="new-password"
+                />
+                <button type="button" onclick="togglePassword('password_confirm', 'eye-icon-2')" class="btn btn-ghost btn-xs btn-circle">
+                    <i id="eye-icon-2" class="fas fa-eye text-base-content/50"></i>
+                </button>
+            </label>
+        </div>
+
+        <!-- Terms and Conditions -->
+        <div class="form-control">
+            <label class="label cursor-pointer justify-start gap-2">
+                <input type="checkbox" class="checkbox checkbox-primary checkbox-sm" required />
+                <span class="label-text text-sm">
+                    أوافق على 
+                    <a href="#" class="link link-primary">الشروط والأحكام</a>
+                    و
+                    <a href="#" class="link link-primary">سياسة الخصوصية</a>
+                </span>
+            </label>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-control pt-2">
+            <button type="submit" class="btn btn-primary w-full">
+                <i class="fas fa-user-plus"></i>
+                إنشاء الحساب
+            </button>
+        </div>
+    </form>
+
+    <!-- Divider -->
+    <div class="divider text-base-content/50 text-sm">أو</div>
+    
+    <!-- Login Link -->
+    <div class="text-center">
+        <p class="text-sm text-base-content/70">
+            لديك حساب بالفعل؟ 
+            <a href="{% url 'authentication:login' %}" class="link link-primary font-semibold">تسجيل الدخول</a>
+        </p>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function togglePassword(fieldId, iconId) {
+        const passwordInput = document.getElementById(fieldId);
+        const eyeIcon = document.getElementById(iconId);
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            eyeIcon.classList.remove('fa-eye');
+            eyeIcon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            eyeIcon.classList.remove('fa-eye-slash');
+            eyeIcon.classList.add('fa-eye');
+        }
+    }
+
+    // تحقق من تطابق كلمات المرور
+    document.addEventListener('DOMContentLoaded', function() {
+        const passwordConfirm = document.getElementById('password_confirm');
+        const password = document.getElementById('password');
+        
+        passwordConfirm.addEventListener('input', function() {
+            if (password.value !== this.value) {
+                this.setCustomValidity('كلمات المرور غير متطابقة');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+        
+        password.addEventListener('input', function() {
+            if (passwordConfirm.value && this.value !== passwordConfirm.value) {
+                passwordConfirm.setCustomValidity('كلمات المرور غير متطابقة');
+            } else {
+                passwordConfirm.setCustomValidity('');
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إضافة مؤثر جديد - منصة المؤثرين</title>
+    
+    <!-- TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- DaisyUI -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-base-200 min-h-screen">
+    
+    <!-- Navbar -->
+    <div class="navbar bg-base-100 shadow-lg">
+        <div class="flex-1">
+            <a href="#" class="btn btn-ghost text-xl">
+                <i class="fas fa-users text-primary ml-2"></i>
+                منصة المؤثرين
+            </a>
+        </div>
+        <div class="flex-none">
+            <button class="btn btn-ghost btn-circle">
+                <i class="fas fa-bell"></i>
+            </button>
+            <div class="dropdown dropdown-end">
+                <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+                    <div class="w-10 rounded-full">
+                        <i class="fas fa-user-circle text-3xl"></i>
+                    </div>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
+        
+        <!-- Page Header -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-base-content mb-2">
+                <i class="fas fa-user-plus text-primary ml-2"></i>
+                إضافة مؤثر جديد
+            </h1>
+            <p class="text-base-content/70">قم بملء البيانات التالية لإضافة مؤثر جديد إلى المنصة</p>
+        </div>
+
+        <!-- Form Card -->
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <form method="POST" action="{% url 'influencers:add_influencer' %}" class="space-y-6">
+                    {% csrf_token %}
+                    
+                    <!-- Personal Information Section -->
+                    <div class="border-b border-base-300 pb-6">
+                        <h2 class="text-2xl font-semibold mb-6 flex items-center">
+                            <i class="fas fa-user text-primary ml-2"></i>
+                            المعلومات الشخصية
+                        </h2>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Name -->
+                            <div class="form-control w-full">
+                                <label class="label">
+                                    <span class="label-text font-semibold">
+                                        <i class="fas fa-id-card ml-2"></i>
+                                        الاسم 
+                                        <span class="text-error">*</span>
+                                    </span>
+                                </label>
+                                <input 
+                                    type="text" 
+                                    name="name" 
+                                    placeholder="أدخل الاسم " 
+                                    class="input input-bordered w-full" 
+                                    required 
+                                />
+                            </div>
+
+                            <!-- Gender -->
+                            <div class="form-control w-full">
+                                <label class="label">
+                                    <span class="label-text font-semibold">
+                                        <i class="fas fa-venus-mars ml-2"></i>
+                                        الجنس
+                                        <span class="text-error">*</span>
+                                    </span>
+                                </label>
+                                <select name="gender" class="select select-bordered w-full" required>
+                                    <option value="" disabled selected>اختر الجنس</option>
+                                    <option value="male">ذكر</option>
+                                    <option value="female">أنثى</option>
+                                </select>
+                            </div>
+
+                            <!-- Verified ID Number -->
+                            <div class="form-control w-full">
+                                <label class="label">
+                                    <span class="label-text font-semibold">
+                                        <i class="fas fa-id-badge ml-2"></i>
+                                        رقم موثوق
+                                    </span>
+                                </label>
+                                <input 
+                                    type="text" 
+                                    name="verified_id" 
+                                    placeholder="أدخل الرقم الموثق" 
+                                    class="input input-bordered w-full" 
+                                     
+                                />
+                                <label class="label">
+                                    <span class="label-text-alt text-base-content/60">
+                                        <i class="fas fa-info-circle ml-1"></i>
+                                        رقم منصة موثوق 
+                                    </span>
+                                </label>
+                            </div>
+
+                            <!-- Contact Phone Number -->
+                            <div class="form-control w-full">
+                                <label class="label">
+                                    <span class="label-text font-semibold">
+                                        <i class="fas fa-mobile-alt ml-2"></i>
+                                        رقم جوال التواصل
+                                        <span class="text-error">*</span>
+                                    </span>
+                                </label>
+                                <input 
+                                    type="tel" 
+                                    name="contact_phone" 
+                                    placeholder="05xxxxxxxx" 
+                                    class="input input-bordered w-full" 
+                                    pattern="[0-9]{10}"
+                                    required 
+                                />
+                                <label class="label">
+                                    <span class="label-text-alt text-base-content/60">
+                                        <i class="fas fa-info-circle ml-1"></i>
+                                        مثال: 0501234567
+                                    </span>
+                                </label>
+                            </div>
+
+                            <!-- City -->
+                            <div class="form-control w-full">
+                                <label class="label">
+                                    <span class="label-text font-semibold">
+                                        <i class="fas fa-city ml-2"></i>
+                                        المدينة
+                                        <span class="text-error">*</span>
+                                    </span>
+                                </label>
+                                <select name="city" class="select select-bordered w-full" required>
+                                    <option value="" disabled selected>اختر المدينة</option>
+                                    <option value="riyadh">الرياض</option>
+                                    <option value="jeddah">جدة</option>
+                                    <option value="makkah">مكة المكرمة</option>
+                                    <option value="madinah">المدينة المنورة</option>
+                                    <option value="dammam">الدمام</option>
+                                    <option value="khobar">الخبر</option>
+                                    <option value="dhahran">الظهران</option>
+                                    <option value="taif">الطائف</option>
+                                    <option value="tabuk">تبوك</option>
+                                    <option value="abha">أبها</option>
+                                    <option value="khamis_mushait">خميس مشيط</option>
+                                    <option value="hail">حائل</option>
+                                    <option value="najran">نجران</option>
+                                    <option value="jazan">جازان</option>
+                                    <option value="other">أخرى</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social Media Section -->
+                    <div class="border-b border-base-300 pb-6">
+                        <h2 class="text-2xl font-semibold mb-6 flex items-center">
+                            <i class="fas fa-share-alt text-primary ml-2"></i>
+                            حسابات التواصل الاجتماعي
+                        </h2>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <!-- TikTok -->
+                            <div class="form-control w-full">
+                                <label class="label">
+                                    <span class="label-text font-semibold">
+                                        <i class="fab fa-tiktok ml-2"></i>
+                                        تيك توك
+                                    </span>
+                                </label>
+                                <label class="input-group">
+                                    <span class="bg-base-300">@</span>
+                                    <input 
+                                        type="text" 
+                                        name="tiktok_username" 
+                                        placeholder="username" 
+                                        class="input input-bordered w-full" 
+                                    />
+                                </label>
+                                <label class="label">
+                                    <span class="label-text-alt text-base-content/60">اسم المستخدم فقط</span>
+                                </label>
+                            </div>
+
+                            <!-- Instagram -->
+                            <div class="form-control w-full">
+                                <label class="label">
+                                    <span class="label-text font-semibold">
+                                        <i class="fab fa-instagram ml-2"></i>
+                                        انستقرام
+                                    </span>
+                                </label>
+                                <label class="input-group">
+                                    <span class="bg-base-300">@</span>
+                                    <input 
+                                        type="text" 
+                                        name="instagram_username" 
+                                        placeholder="username" 
+                                        class="input input-bordered w-full" 
+                                    />
+                                </label>
+                                <label class="label">
+                                    <span class="label-text-alt text-base-content/60">اسم المستخدم فقط</span>
+                                </label>
+                            </div>
+
+                            <!-- Snapchat -->
+                            <div class="form-control w-full">
+                                <label class="label">
+                                    <span class="label-text font-semibold">
+                                        <i class="fab fa-snapchat ml-2"></i>
+                                        سناب شات
+                                    </span>
+                                </label>
+                                <label class="input-group">
+                                    <span class="bg-base-300">@</span>
+                                    <input 
+                                        type="text" 
+                                        name="snapchat_username" 
+                                        placeholder="username" 
+                                        class="input input-bordered w-full" 
+                                    />
+                                </label>
+                                <label class="label">
+                                    <span class="label-text-alt text-base-content/60">اسم المستخدم فقط</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info mt-4">
+                            <i class="fas fa-info-circle"></i>
+                            <span>قم بإدخال اسم المستخدم فقط بدون (@) أو الرابط الكامل</span>
+                        </div>
+                    </div>
+
+                    <!-- Content Categories Section -->
+                    <div class="pb-6">
+                        <h2 class="text-2xl font-semibold mb-6 flex items-center">
+                            <i class="fas fa-tags text-primary ml-2"></i>
+                            تصنيف المحتوى
+                            <span class="text-error text-lg mr-2">*</span>
+                        </h2>
+                        
+                        <p class="text-base-content/70 mb-4">
+                            <i class="fas fa-check-double ml-2"></i>
+                            يمكنك اختيار أكثر من تصنيف
+                        </p>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <!-- Fashion -->
+                            <label class="label cursor-pointer bg-base-200 p-4 rounded-lg hover:bg-base-300 transition-all">
+                                <span class="label-text font-semibold">
+                                    <i class="fas fa-tshirt text-primary ml-2"></i>
+                                    الموضة والأزياء
+                                </span>
+                                <input type="checkbox" name="categories" value="fashion" class="checkbox checkbox-primary" />
+                            </label>
+
+                            <!-- Beauty -->
+                            <label class="label cursor-pointer bg-base-200 p-4 rounded-lg hover:bg-base-300 transition-all">
+                                <span class="label-text font-semibold">
+                                    <i class="fas fa-spa text-primary ml-2"></i>
+                                    الجمال والعناية
+                                </span>
+                                <input type="checkbox" name="categories" value="beauty" class="checkbox checkbox-primary" />
+                            </label>
+
+                            <!-- Sports -->
+                            <label class="label cursor-pointer bg-base-200 p-4 rounded-lg hover:bg-base-300 transition-all">
+                                <span class="label-text font-semibold">
+                                    <i class="fas fa-futbol text-primary ml-2"></i>
+                                    الرياضة واللياقة
+                                </span>
+                                <input type="checkbox" name="categories" value="sports" class="checkbox checkbox-primary" />
+                            </label>
+
+                            <!-- Food -->
+                            <label class="label cursor-pointer bg-base-200 p-4 rounded-lg hover:bg-base-300 transition-all">
+                                <span class="label-text font-semibold">
+                                    <i class="fas fa-utensils text-primary ml-2"></i>
+                                    الطعام والطبخ
+                                </span>
+                                <input type="checkbox" name="categories" value="food" class="checkbox checkbox-primary" />
+                            </label>
+
+                            <!-- Travel -->
+                            <label class="label cursor-pointer bg-base-200 p-4 rounded-lg hover:bg-base-300 transition-all">
+                                <span class="label-text font-semibold">
+                                    <i class="fas fa-plane text-primary ml-2"></i>
+                                    السفر والسياحة
+                                </span>
+                                <input type="checkbox" name="categories" value="travel" class="checkbox checkbox-primary" />
+                            </label>
+
+                            <!-- Technology -->
+                            <label class="label cursor-pointer bg-base-200 p-4 rounded-lg hover:bg-base-300 transition-all">
+                                <span class="label-text font-semibold">
+                                    <i class="fas fa-laptop text-primary ml-2"></i>
+                                    التقنية والتكنولوجيا
+                                </span>
+                                <input type="checkbox" name="categories" value="technology" class="checkbox checkbox-primary" />
+                            </label>
+
+                            <!-- Gaming -->
+                            <label class="label cursor-pointer bg-base-200 p-4 rounded-lg hover:bg-base-300 transition-all">
+                                <span class="label-text font-semibold">
+                                    <i class="fas fa-gamepad text-primary ml-2"></i>
+                                    الألعاب الإلكترونية
+                                </span>
+                                <input type="checkbox" name="categories" value="gaming" class="checkbox checkbox-primary" />
+                            </label>
+
+                            <!-- Entertainment -->
+                            <label class="label cursor-pointer bg-base-200 p-4 rounded-lg hover:bg-base-300 transition-all">
+                                <span class="label-text font-semibold">
+                                    <i class="fas fa-film text-primary ml-2"></i>
+                                    الترفيه والكوميديا
+                                </span>
+                                <input type="checkbox" name="categories" value="entertainment" class="checkbox checkbox-primary" />
+                            </label>
+
+                            <!-- Education -->
+                            <label class="label cursor-pointer bg-base-200 p-4 rounded-lg hover:bg-base-300 transition-all">
+                                <span class="label-text font-semibold">
+                                    <i class="fas fa-graduation-cap text-primary ml-2"></i>
+                                    التعليم والثقافة
+                                </span>
+                                <input type="checkbox" name="categories" value="education" class="checkbox checkbox-primary" />
+                            </label>
+
+                            <!-- Family -->
+                            <label class="label cursor-pointer bg-base-200 p-4 rounded-lg hover:bg-base-300 transition-all">
+                                <span class="label-text font-semibold">
+                                    <i class="fas fa-home text-primary ml-2"></i>
+                                    الأسرة والمنزل
+                                </span>
+                                <input type="checkbox" name="categories" value="family" class="checkbox checkbox-primary" />
+                            </label>
+
+                            <!-- Business -->
+                            <label class="label cursor-pointer bg-base-200 p-4 rounded-lg hover:bg-base-300 transition-all">
+                                <span class="label-text font-semibold">
+                                    <i class="fas fa-briefcase text-primary ml-2"></i>
+                                    الأعمال والريادة
+                                </span>
+                                <input type="checkbox" name="categories" value="business" class="checkbox checkbox-primary" />
+                            </label>
+
+                            <!-- Health -->
+                            <label class="label cursor-pointer bg-base-200 p-4 rounded-lg hover:bg-base-300 transition-all">
+                                <span class="label-text font-semibold">
+                                    <i class="fas fa-heartbeat text-primary ml-2"></i>
+                                    الصحة والعافية
+                                </span>
+                                <input type="checkbox" name="categories" value="health" class="checkbox checkbox-primary" />
+                            </label>
+
+                            <!-- Lifestyle -->
+                            <label class="label cursor-pointer bg-base-200 p-4 rounded-lg hover:bg-base-300 transition-all">
+                                <span class="label-text font-semibold">
+                                    <i class="fas fa-coffee text-primary ml-2"></i>
+                                    نمط الحياة
+                                </span>
+                                <input type="checkbox" name="categories" value="lifestyle" class="checkbox checkbox-primary" />
+                            </label>
+
+                            <!-- Art -->
+                            <label class="label cursor-pointer bg-base-200 p-4 rounded-lg hover:bg-base-300 transition-all">
+                                <span class="label-text font-semibold">
+                                    <i class="fas fa-palette text-primary ml-2"></i>
+                                    الفن والإبداع
+                                </span>
+                                <input type="checkbox" name="categories" value="art" class="checkbox checkbox-primary" />
+                            </label>
+
+                            <!-- Cars -->
+                            <label class="label cursor-pointer bg-base-200 p-4 rounded-lg hover:bg-base-300 transition-all">
+                                <span class="label-text font-semibold">
+                                    <i class="fas fa-car text-primary ml-2"></i>
+                                    السيارات
+                                </span>
+                                <input type="checkbox" name="categories" value="cars" class="checkbox checkbox-primary" />
+                            </label>
+
+                            <!-- Other -->
+                            <label class="label cursor-pointer bg-base-200 p-4 rounded-lg hover:bg-base-300 transition-all">
+                                <span class="label-text font-semibold">
+                                    <i class="fas fa-ellipsis-h text-primary ml-2"></i>
+                                    أخرى
+                                </span>
+                                <input type="checkbox" name="categories" value="other" class="checkbox checkbox-primary" />
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="divider"></div>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 justify-end">
+                        <button type="reset" class="btn btn-outline btn-error">
+                            <i class="fas fa-times ml-2"></i>
+                            إلغاء
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-check ml-2"></i>
+                            حفظ البيانات
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer footer-center p-10 bg-base-100 text-base-content mt-12">
+        <aside>
+            <i class="fas fa-users text-5xl text-primary"></i>
+            <p class="font-bold text-lg">
+                منصة المؤثرين
+            </p> 
+            <p>جميع الحقوق محفوظة © 2025</p>
+        </aside>
+    </footer>
+
+    <!-- JavaScript for form validation -->
+    <script>
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const checkboxes = document.querySelectorAll('input[name="categories"]:checked');
+            
+            if (checkboxes.length === 0) {
+                e.preventDefault();
+                alert('الرجاء اختيار تصنيف واحد على الأقل للمحتوى');
+                return false;
+            }
+        });
+
+        // Add animation on checkbox change
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const label = this.closest('label');
+                if (this.checked) {
+                    label.classList.add('ring-2', 'ring-primary');
+                } else {
+                    label.classList.remove('ring-2', 'ring-primary');
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

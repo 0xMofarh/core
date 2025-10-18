@@ -1,0 +1,174 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block page_title %}حملاتي{% endblock %}
+
+{% block breadcrumb_items %}
+<li><a href="{% url 'dashboard:dashboard' %}">الصفحة الرئيسية</a></li>
+<li>حملاتي</li>
+{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<div class="card bg-base-100 shadow-xl mb-8">
+    <div class="card-body">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+                <h2 class="card-title text-3xl mb-2">
+                    <i class="fas fa-bullhorn text-primary"></i>
+                    حملاتي
+                </h2>
+                <p class="text-base-content/70">إدارة وتتبع حملاتك التسويقية</p>
+            </div>
+            <a href="{% url 'campaigns:create_campaign' %}" class="btn btn-primary">
+                <i class="fas fa-plus mr-2"></i>
+                إنشاء حملة جديدة
+            </a>
+        </div>
+        
+        <!-- Filters -->
+        <div class="mt-6">
+            <form method="GET" class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">فلترة حسب الحالة</span>
+                    </label>
+                    <select name="status" class="select select-bordered">
+                        <option value="">جميع الحالات</option>
+                        {% for value, label in status_choices %}
+                            <option value="{{ value }}" {% if filters.status == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mt-6">
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="fas fa-filter mr-2"></i>
+                        تطبيق الفلتر
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Campaigns List -->
+<div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+        {% if campaigns %}
+            <div class="overflow-x-auto">
+                <table class="table table-zebra">
+                    <thead>
+                        <tr>
+                            <th>الحملة</th>
+                            <th>العلامة التجارية</th>
+                            <th>الميزانية</th>
+                            <th>الحالة</th>
+                            <th>تاريخ البداية</th>
+                            <th>تاريخ النهاية</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for campaign in campaigns %}
+                        <tr class="hover">
+                            <td>
+                                <div>
+                                    <div class="font-bold">{{ campaign.title }}</div>
+                                    <div class="text-sm text-base-content/70 line-clamp-1">{{ campaign.description|truncatewords:8 }}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="badge badge-outline">{{ campaign.brand }}</div>
+                            </td>
+                            <td>
+                                <div class="font-bold text-primary">{{ campaign.budget }} ريال</div>
+                            </td>
+                            <td>
+                                {% if campaign.status == 'active' %}
+                                    <div class="badge badge-success">نشطة</div>
+                                {% elif campaign.status == 'draft' %}
+                                    <div class="badge badge-neutral">مسودة</div>
+                                {% elif campaign.status == 'paused' %}
+                                    <div class="badge badge-warning">متوقفة</div>
+                                {% elif campaign.status == 'completed' %}
+                                    <div class="badge badge-info">مكتملة</div>
+                                {% elif campaign.status == 'cancelled' %}
+                                    <div class="badge badge-error">ملغاة</div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="text-sm">{{ campaign.start_date|date:"Y/m/d" }}</div>
+                            </td>
+                            <td>
+                                <div class="text-sm">{{ campaign.end_date|date:"Y/m/d" }}</div>
+                            </td>
+                            <td>
+                                <div class="flex items-center gap-2">
+                                    <a href="{% url 'campaigns:campaign_detail' campaign.id %}" 
+                                       class="btn btn-primary btn-xs">
+                                        <i class="fas fa-eye"></i>
+                                        عرض
+                                    </a>
+                                    <a href="{% url 'campaigns:edit_campaign' campaign.id %}" class="btn btn-info btn-xs">
+                                        <i class="fas fa-edit"></i>
+                                        تعديل
+                                    </a>
+                                    <form method="POST" 
+                                    action="{% url 'campaigns:delete_campaign' campaign.id %}" 
+                                    style="display:inline;" 
+                                    onsubmit="return confirm('هل أنت متأكد أنك تريد حذف هذه الحملة؟');">
+                                  {% csrf_token %}
+                                  <button type="submit" class="btn btn-error btn-xs">
+                                      <i class="fas fa-trash"></i>
+                                      حذف
+                                  </button>
+                              </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            {% if page_obj.has_other_pages %}
+                <div class="flex justify-center mt-8">
+                    <div class="join">
+                        {% if page_obj.has_previous %}
+                            <a href="?page={{ page_obj.previous_page_number }}" class="join-item btn btn-sm">
+                                <i class="fas fa-chevron-right"></i>
+                                السابق
+                            </a>
+                        {% endif %}
+                        
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <span class="join-item btn btn-sm btn-primary">{{ num }}</span>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <a href="?page={{ num }}" class="join-item btn btn-sm">{{ num }}</a>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}" class="join-item btn btn-sm">
+                                التالي
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="text-center py-12">
+                <i class="fas fa-bullhorn text-6xl text-base-content/30 mb-4"></i>
+                <h3 class="text-xl font-semibold mb-2">لا توجد حملات</h3>
+                <p class="text-base-content/70 mb-6">ابدأ بإنشاء حملتك الأولى للتواصل مع المؤثرين</p>
+                <a href="{% url 'campaigns:create_campaign' %}" class="btn btn-primary">
+                    <i class="fas fa-plus mr-2"></i>
+                    إنشاء حملة جديدة
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

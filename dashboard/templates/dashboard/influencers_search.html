@@ -1,0 +1,670 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block page_title %}البحث عن المؤثرين{% endblock %}
+
+{% block breadcrumb_items %}
+<li><a href="{% url 'dashboard:dashboard' %}">الصفحة الرئيسية</a></li>
+<li>البحث عن المؤثرين</li>
+{% endblock %}
+
+{% block content %}
+<!-- Search and Filters Section -->
+<div class="card bg-base-100 shadow-xl mb-8">
+    <div class="card-body">
+        <h2 class="card-title text-2xl mb-6">
+            <i class="fas fa-search text-primary"></i>
+            البحث والفلترة
+        </h2>
+        
+        <form method="GET" class="space-y-6">
+            <!-- Search Bar -->
+            <div class="form-control">
+                <div class="input-group">
+                    <input type="text" 
+                           name="search" 
+                           placeholder="ابحث عن المؤثرين..." 
+                           value="{{ request.GET.search }}"
+                           class="input input-bordered flex-1" />
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+                <!-- City Filter -->
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">المدينة</span>
+                    </label>
+                    <select name="city" class="select select-bordered">
+                        <option value="">جميع المدن</option>
+                        {% for city in cities %}
+                            <option value="{{ city }}" {% if filters.city == city %}selected{% endif %}>{{ city }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Gender Filter -->
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">الجنس</span>
+                    </label>
+                    <select name="gender" class="select select-bordered">
+                        <option value="">جميع الأجناس</option>
+                        {% for value, label in genders %}
+                            <option value="{{ value }}" {% if filters.gender == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Platform Filter -->
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">المنصة</span>
+                    </label>
+                    <select name="platform" class="select select-bordered">
+                        <option value="">جميع المنصات</option>
+                        {% for value, label in platforms %}
+                            <option value="{{ value }}" {% if filters.platform == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Content Type Filter -->
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">نوع المحتوى</span>
+                    </label>
+                    <select name="content_type" class="select select-bordered">
+                        <option value="">جميع الأنواع</option>
+                        {% for value, label in content_types %}
+                            <option value="{{ value }}" {% if filters.content_type == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Followers Min -->
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">الحد الأدنى للمتابعين</span>
+                    </label>
+                    <input type="number" 
+                           name="followers_min" 
+                           placeholder="1000" 
+                           value="{{ filters.followers_min }}"
+                           class="input input-bordered" />
+                </div>
+
+                <!-- Followers Max -->
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">الحد الأقصى للمتابعين</span>
+                    </label>
+                    <input type="number" 
+                           name="followers_max" 
+                           placeholder="100000" 
+                           value="{{ filters.followers_max }}"
+                           class="input input-bordered" />
+                </div>
+            </div>
+
+            <!-- Sort and Actions -->
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-4 border-t border-base-300">
+                <div class="flex items-center gap-4">
+                    <label class="label">
+                        <span class="label-text">ترتيب حسب:</span>
+                    </label>
+                    <select name="sort_by" class="select select-bordered select-sm">
+                        <option value="followers_count" {% if filters.sort_by == 'followers_count' %}selected{% endif %}>عدد المتابعين</option>
+                        <option value="engagement_rate" {% if filters.sort_by == 'engagement_rate' %}selected{% endif %}>معدل التفاعل</option>
+                        <option value="created_at" {% if filters.sort_by == 'created_at' %}selected{% endif %}>تاريخ الانضمام</option>
+                    </select>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                    <button type="button" onclick="clearFilters()" class="btn btn-ghost btn-sm">
+                        <i class="fas fa-times mr-2"></i>
+                        مسح الفلاتر
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="fas fa-filter mr-2"></i>
+                        تطبيق الفلاتر
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Results Section -->
+<div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+            <div class="flex items-center gap-4">
+                <h2 class="card-title text-2xl">
+                    <i class="fas fa-users text-primary"></i>
+                    نتائج البحث
+                </h2>
+                <div class="badge badge-primary badge-lg">{{ page_obj.paginator.count }} مؤثر</div>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-2">
+                <button onclick="openAddInfluencerModal()" class="btn btn-primary btn-sm">
+                    <i class="fas fa-user-plus mr-2"></i>
+                    إضافة مؤثر
+                </button>
+                <button onclick="openBulkUploadModal()" class="btn btn-secondary btn-sm">
+                    <i class="fas fa-upload mr-2"></i>
+                    رفع ملف Excel
+                </button>
+            </div>
+        </div>
+        
+        {% if page_obj %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for influencer in page_obj %}
+                <div class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 border border-base-300 influencer-card">
+                    <div class="card-body p-6">
+                        <!-- Profile Header -->
+                        <div class="flex items-start gap-4 mb-4">
+                            <div class="avatar">
+                                <div class="w-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 profile-image">
+                                    {% if influencer.profile_image %}
+                                        <img src="{{ influencer.profile_image }}" alt="{{ influencer.name }}" class="w-20 h-20 rounded-full object-cover">
+                                    {% else %}
+                                        <div class="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-secondary text-primary-content flex items-center justify-center">
+                                            <span class="text-2xl font-bold">{{ influencer.name|first|upper }}</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <h3 class="font-bold text-xl text-base-content">{{ influencer.name }}</h3>
+                                    {% if influencer.tiktok_verified or influencer.instagram_verified or influencer.twitter_verified %}
+                                        <div class="badge badge-primary badge-sm">
+                                            <i class="fas fa-check-circle text-xs"></i>
+                                            موثق
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <p class="text-base-content/70 text-sm mb-2">
+                                    <i class="fas fa-map-marker-alt mr-1"></i>
+                                    {{ influencer.city }}
+                                </p>
+                                <div class="badge badge-outline badge-primary badge-sm">
+                                    {{ influencer.get_content_type_display }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bio -->
+                        {% if influencer.bio %}
+                            <div class="mb-4">
+                                <p class="text-base-content/80 text-sm leading-relaxed line-clamp-2">
+                                    {{ influencer.bio|truncatewords:25 }}
+                                </p>
+                            </div>
+                        {% endif %}
+
+                        <!-- Social Media Platforms -->
+                        <div class="space-y-3 mb-4">
+                            <h4 class="text-sm font-semibold text-base-content/70 mb-2">حسابات السوشل ميديا</h4>
+                            
+                            <!-- TikTok -->
+                            {% if influencer.tiktok_username %}
+                                <div class="flex items-center justify-between p-3 bg-black/5 rounded-lg hover:bg-black/10 transition-colors social-platform-item">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 bg-black rounded-full flex items-center justify-center">
+                                            <i class="fab fa-tiktok text-white text-sm"></i>
+                                        </div>
+                                        <span class="font-medium text-sm">تيك توك</span>
+                                    </div>
+                                    <div class="text-left">
+                                        <div class="text-xs text-base-content/60">@{{ influencer.tiktok_username }}</div>
+                                        <div class="text-sm font-semibold">{{ influencer.tiktok_followers|floatformat:0 }}</div>
+                                    </div>
+                                    <a href="https://tiktok.com/@{{ influencer.tiktok_username }}" target="_blank" 
+                                       class="btn btn-ghost btn-xs">
+                                        <i class="fas fa-external-link-alt"></i>
+                                    </a>
+                                </div>
+                            {% endif %}
+
+                            <!-- Instagram -->
+                            {% if influencer.instagram_username %}
+                                <div class="flex items-center justify-between p-3 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-lg hover:from-purple-500/20 hover:to-pink-500/20 transition-colors social-platform-item">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                                            <i class="fab fa-instagram text-white text-sm"></i>
+                                        </div>
+                                        <span class="font-medium text-sm">إنستقرام</span>
+                                    </div>
+                                    <div class="text-left">
+                                        <div class="text-xs text-base-content/60">@{{ influencer.instagram_username }}</div>
+                                        <div class="text-sm font-semibold">{{ influencer.instagram_followers|floatformat:0 }}</div>
+                                    </div>
+                                    <a href="https://instagram.com/{{ influencer.instagram_username }}" target="_blank" 
+                                       class="btn btn-ghost btn-xs">
+                                        <i class="fas fa-external-link-alt"></i>
+                                    </a>
+                                </div>
+                            {% endif %}
+
+                            <!-- Twitter -->
+                            {% if influencer.twitter_username %}
+                                <div class="flex items-center justify-between p-3 bg-blue-500/10 rounded-lg hover:bg-blue-500/20 transition-colors social-platform-item">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                                            <i class="fab fa-twitter text-white text-sm"></i>
+                                        </div>
+                                        <span class="font-medium text-sm">تويتر</span>
+                                    </div>
+                                    <div class="text-left">
+                                        <div class="text-xs text-base-content/60">@{{ influencer.twitter_username }}</div>
+                                        <div class="text-sm font-semibold">{{ influencer.twitter_followers|floatformat:0 }}</div>
+                                    </div>
+                                    <a href="https://twitter.com/{{ influencer.twitter_username }}" target="_blank" 
+                                       class="btn btn-ghost btn-xs">
+                                        <i class="fas fa-external-link-alt"></i>
+                                    </a>
+                                </div>
+                            {% endif %}
+
+                            <!-- Snapchat -->
+                            {% if influencer.snapchat_username %}
+                                <div class="flex items-center justify-between p-3 bg-yellow-500/10 rounded-lg hover:bg-yellow-500/20 transition-colors social-platform-item">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
+                                            <i class="fab fa-snapchat text-white text-sm"></i>
+                                        </div>
+                                        <span class="font-medium text-sm">سناب شات</span>
+                                    </div>
+                                    <div class="text-left">
+                                        <div class="text-xs text-base-content/60">@{{ influencer.snapchat_username }}</div>
+                                        <div class="text-sm font-semibold">{{ influencer.snapchat_followers|floatformat:0 }}</div>
+                                    </div>
+                                    <a href="https://snapchat.com/add/{{ influencer.snapchat_username }}" target="_blank" 
+                                       class="btn btn-ghost btn-xs">
+                                        <i class="fas fa-external-link-alt"></i>
+                                    </a>
+                                </div>
+                            {% endif %}
+
+                            <!-- No Social Media -->
+                            {% if not influencer.tiktok_username and not influencer.instagram_username and not influencer.twitter_username and not influencer.snapchat_username %}
+                                <div class="text-center py-4 text-base-content/50">
+                                    <i class="fas fa-share-alt text-2xl mb-2"></i>
+                                    <p class="text-sm">لا توجد حسابات سوشل ميديا</p>
+                                </div>
+                            {% endif %}
+                        </div>
+
+
+                        <!-- Action Buttons -->
+                        <div class="card-actions justify-between">
+                            <a href="{% url 'dashboard:influencer_detail' influencer.id %}" 
+                               class="btn btn-primary btn-sm flex-1 btn-hover-effect">
+                                <i class="fas fa-user mr-2"></i>
+                                عرض الملف الشخصي
+                            </a>
+                            <button class="btn btn-outline btn-sm btn-hover-effect" onclick="contactInfluencer({{ influencer.id }})">
+                                <i class="fas fa-envelope mr-1"></i>
+                                تواصل
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if page_obj.has_other_pages %}
+                <div class="flex justify-center mt-8">
+                    <div class="join">
+                        {% if page_obj.has_previous %}
+                            <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}" 
+                               class="join-item btn btn-sm">
+                                <i class="fas fa-chevron-right"></i>
+                                السابق
+                            </a>
+                        {% endif %}
+
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <span class="join-item btn btn-sm btn-primary">{{ num }}</span>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ num }}" 
+                                   class="join-item btn btn-sm">{{ num }}</a>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                            <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}" 
+                               class="join-item btn btn-sm">
+                                التالي
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="text-center py-12">
+                <i class="fas fa-users text-6xl text-base-content/30 mb-4"></i>
+                <h3 class="text-xl font-semibold mb-2">لم يتم العثور على مؤثرين</h3>
+                <p class="text-base-content/70 mb-6">جرب تعديل معايير البحث أو الفلاتر</p>
+                <button onclick="clearFilters()" class="btn btn-primary">
+                    <i class="fas fa-times mr-2"></i>
+                    مسح الفلاتر
+                </button>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Add Influencer Modal -->
+<dialog id="add_influencer_modal" class="modal">
+    <div class="modal-box w-11/12 max-w-4xl">
+        <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        </form>
+        <h3 class="font-bold text-2xl mb-6">
+            <i class="fas fa-user-plus text-primary mr-2"></i>
+            إضافة مؤثر جديد
+        </h3>
+        
+        <form method="POST" action="{% url 'dashboard:add_influencer' %}" class="space-y-6">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Basic Info -->
+                <div class="space-y-4">
+                    <h4 class="text-lg font-semibold text-primary">المعلومات الأساسية</h4>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">الاسم الكامل *</span>
+                        </label>
+                        <input type="text" name="full_name" class="input input-bordered" required>
+                    </div>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">البريد الإلكتروني *</span>
+                        </label>
+                        <input type="email" name="email" class="input input-bordered" required>
+                    </div>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">رقم الهاتف *</span>
+                        </label>
+                        <input type="tel" name="mobile_number" class="input input-bordered" required>
+                    </div>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">المدينة *</span>
+                        </label>
+                        <input type="text" name="city" class="input input-bordered" required>
+                    </div>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">الجنس *</span>
+                        </label>
+                        <select name="gender" class="select select-bordered" required>
+                            <option value="">اختر الجنس</option>
+                            <option value="male">ذكر</option>
+                            <option value="female">أنثى</option>
+                            <option value="other">أخرى</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Social Media & Stats -->
+                <div class="space-y-4">
+                    <h4 class="text-lg font-semibold text-secondary">التواصل الاجتماعي والإحصائيات</h4>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">إنستقرام</span>
+                        </label>
+                        <input type="text" name="instagram_handle" class="input input-bordered" placeholder="@username">
+                    </div>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">تيك توك</span>
+                        </label>
+                        <input type="text" name="tiktok_handle" class="input input-bordered" placeholder="@username">
+                    </div>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">سناب شات</span>
+                        </label>
+                        <input type="text" name="snapchat_handle" class="input input-bordered" placeholder="username">
+                    </div>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">يوتيوب</span>
+                        </label>
+                        <input type="text" name="youtube_handle" class="input input-bordered" placeholder="@username">
+                    </div>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">عدد المتابعين</span>
+                        </label>
+                        <input type="number" name="followers_count" class="input input-bordered" placeholder="10000">
+                    </div>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">معدل التفاعل (%)</span>
+                        </label>
+                        <input type="number" step="0.1" name="engagement_rate" class="input input-bordered" placeholder="3.5">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Content Type & Platform -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">نوع المحتوى *</span>
+                    </label>
+                    <select name="content_type" class="select select-bordered" required>
+                        <option value="">اختر نوع المحتوى</option>
+                        <option value="fashion">أزياء</option>
+                        <option value="beauty">جمال</option>
+                        <option value="food">طعام</option>
+                        <option value="travel">سفر</option>
+                        <option value="lifestyle">نمط حياة</option>
+                        <option value="tech">تقنية</option>
+                        <option value="fitness">لياقة بدنية</option>
+                        <option value="entertainment">ترفيه</option>
+                        <option value="business">أعمال</option>
+                        <option value="education">تعليم</option>
+                    </select>
+                </div>
+                
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">المنصة الرئيسية *</span>
+                    </label>
+                    <select name="primary_platform" class="select select-bordered" required>
+                        <option value="">اختر المنصة الرئيسية</option>
+                        <option value="instagram">إنستقرام</option>
+                        <option value="tiktok">تيك توك</option>
+                        <option value="snapchat">سناب شات</option>
+                        <option value="youtube">يوتيوب</option>
+                        <option value="twitter">تويتر</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Bio -->
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">نبذة شخصية</span>
+                </label>
+                <textarea name="bio" class="textarea textarea-bordered h-24" placeholder="اكتب نبذة مختصرة عن المؤثر..."></textarea>
+            </div>
+            
+            <div class="modal-action">
+                <button type="button" class="btn btn-ghost" onclick="closeAddInfluencerModal()">إلغاء</button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save mr-2"></i>
+                    حفظ المؤثر
+                </button>
+            </div>
+        </form>
+    </div>
+</dialog>
+
+<!-- Bulk Upload Modal -->
+<dialog id="bulk_upload_modal" class="modal">
+    <div class="modal-box w-11/12 max-w-2xl">
+        <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        </form>
+        <h3 class="font-bold text-2xl mb-6">
+            <i class="fas fa-upload text-secondary mr-2"></i>
+            رفع ملف Excel للمؤثرين
+        </h3>
+        
+        <div class="space-y-6">
+            <!-- Instructions -->
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                    <h4 class="font-bold">تعليمات رفع الملف:</h4>
+                    <ul class="text-sm mt-2 space-y-1">
+                        <li>• يجب أن يكون الملف بصيغة Excel (.xlsx أو .xls)</li>
+                        <li>• يجب أن يحتوي على الأعمدة المطلوبة</li>
+                        <li>• الحد الأقصى للملف: 5 ميجابايت</li>
+                        <li>• الحد الأقصى للصفوف: 1000 صف</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Download Template -->
+            <div class="card bg-base-200">
+                <div class="card-body">
+                    <h4 class="card-title text-lg">
+                        <i class="fas fa-download text-accent"></i>
+                        تحميل قالب Excel
+                    </h4>
+                    <p class="text-sm text-base-content/70 mb-4">
+                        حمل قالب Excel جاهز مع الأعمدة المطلوبة لسهولة إدخال البيانات
+                    </p>
+                    <a href="{% url 'dashboard:download_template' %}" class="btn btn-accent btn-sm">
+                        <i class="fas fa-download mr-2"></i>
+                        تحميل القالب
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Upload Form -->
+            <form method="POST" action="{% url 'dashboard:bulk_upload_influencers' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">اختر ملف Excel *</span>
+                    </label>
+                    <input type="file" name="excel_file" accept=".xlsx,.xls" class="file-input file-input-bordered w-full" required>
+                </div>
+                
+                <div class="modal-action">
+                    <button type="button" class="btn btn-ghost" onclick="closeBulkUploadModal()">إلغاء</button>
+                    <button type="submit" class="btn btn-secondary">
+                        <i class="fas fa-upload mr-2"></i>
+                        رفع الملف
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</dialog>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function clearFilters() {
+        // Clear all form inputs
+        document.querySelectorAll('input, select').forEach(input => {
+            if (input.type === 'text' || input.type === 'number') {
+                input.value = '';
+            } else if (input.tagName === 'SELECT') {
+                input.selectedIndex = 0;
+            }
+        });
+        
+        // Submit the form to reload with cleared filters
+        document.querySelector('form').submit();
+    }
+    
+    // Modal functions
+    function openAddInfluencerModal() {
+        document.getElementById('add_influencer_modal').showModal();
+    }
+    
+    function closeAddInfluencerModal() {
+        document.getElementById('add_influencer_modal').close();
+    }
+    
+    function openBulkUploadModal() {
+        document.getElementById('bulk_upload_modal').showModal();
+    }
+    
+    function closeBulkUploadModal() {
+        document.getElementById('bulk_upload_modal').close();
+    }
+    
+    // Close modals when clicking outside
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('modal')) {
+            event.target.close();
+        }
+    });
+    
+    // Contact influencer function
+    function contactInfluencer(influencerId) {
+        // You can implement this function based on your needs
+        // For now, we'll show a simple alert
+        alert('سيتم إضافة وظيفة التواصل مع المؤثر قريباً!');
+        
+        // Future implementation could include:
+        // - Opening a contact modal
+        // - Sending a message
+        // - Adding to favorites
+        // - Creating a campaign
+    }
+    
+    // Add smooth scrolling for better UX
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add loading animation to cards
+        const cards = document.querySelectorAll('.influencer-card');
+        cards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+            card.classList.add('fade-in');
+        });
+        
+        // Add hover effects to social platform items
+        const platformItems = document.querySelectorAll('.social-platform-item');
+        platformItems.forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateX(-4px)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateX(0)';
+            });
+        });
+    });
+</script>
+{% endblock %}

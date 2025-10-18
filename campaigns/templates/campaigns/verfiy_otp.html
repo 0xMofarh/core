@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تأكيد كود التحقق - منصة المؤثرين</title>
+    
+    <!-- TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- DaisyUI -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .otp-input {
+            width: 50px;
+            height: 60px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .otp-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            outline: none;
+        }
+        
+        .otp-input.filled {
+            border-color: #10b981;
+            background-color: #f0fdf4;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-md">
+        <!-- Main Card -->
+        <div class="card bg-white shadow-2xl fade-in">
+            <div class="card-body p-8">
+                <!-- Header -->
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-shield-alt text-primary text-2xl"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold text-gray-800 mb-2">تأكيد كود التحقق</h1>
+                    <p class="text-gray-600">أدخل الكود المكون من 6 أرقام المرسل إليك</p>
+                </div>
+
+                <!-- Messages -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags|default:'info' }} mb-6">
+                            <i class="fas fa-{{ message.tags == 'error' and 'exclamation-circle' or 'info-circle' }}"></i>
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <!-- OTP Form -->
+                <form method="post" action="{% url 'authentication:verify_otp' %}" id="otpForm">
+                    {% csrf_token %}
+                    
+                    <!-- OTP Input Fields -->
+                    <div class="flex justify-center gap-3 mb-8">
+                        <input type="text" class="otp-input" maxlength="1" data-index="0" autocomplete="off">
+                        <input type="text" class="otp-input" maxlength="1" data-index="1" autocomplete="off">
+                        <input type="text" class="otp-input" maxlength="1" data-index="2" autocomplete="off">
+                        <input type="text" class="otp-input" maxlength="1" data-index="3" autocomplete="off">
+                        <input type="text" class="otp-input" maxlength="1" data-index="4" autocomplete="off">
+                        <input type="text" class="otp-input" maxlength="1" data-index="5" autocomplete="off">
+                    </div>
+                    
+                    <!-- Hidden input for complete OTP -->
+                    <input type="hidden" name="otp_code" id="otpCode" required>
+                    
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary w-full mb-4" id="submitBtn" disabled>
+                        <i class="fas fa-check mr-2"></i>
+                        تأكيد الكود
+                    </button>
+                </form>
+
+                <!-- Timer -->
+                <div class="text-center mb-6">
+                    <div class="text-sm text-gray-600 mb-2">لم يصلك الكود؟</div>
+                    <div class="text-sm text-gray-500" id="timer">
+                        يمكنك إعادة الإرسال خلال <span id="countdown">60</span> ثانية
+                    </div>
+                    <button type="button" class="btn btn-link btn-sm mt-2" id="resendBtn" style="display: none;">
+                        إعادة إرسال الكود
+                    </button>
+                </div>
+
+                <!-- Back to Login -->
+                <div class="text-center">
+                    <a href="{% url 'authentication:login' %}" class="text-primary hover:text-primary/80 text-sm">
+                        <i class="fas fa-arrow-right mr-1"></i>
+                        العودة لتسجيل الدخول
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-6">
+            <p class="text-white/80 text-sm">
+                <i class="fas fa-lock mr-1"></i>
+                معلوماتك محمية ومشفرة
+            </p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const otpInputs = document.querySelectorAll('.otp-input');
+            const otpCodeInput = document.getElementById('otpCode');
+            const submitBtn = document.getElementById('submitBtn');
+            const timer = document.getElementById('timer');
+            const countdown = document.getElementById('countdown');
+            const resendBtn = document.getElementById('resendBtn');
+            
+            let timeLeft = 60;
+            let timerInterval;
+
+            // Auto-focus first input
+            otpInputs[0].focus();
+
+            // Handle OTP input
+            otpInputs.forEach((input, index) => {
+                input.addEventListener('input', function(e) {
+                    const value = e.target.value;
+                    
+                    // Only allow numbers
+                    if (!/^\d$/.test(value)) {
+                        e.target.value = '';
+                        return;
+                    }
+                    
+                    // Add filled class
+                    if (value) {
+                        e.target.classList.add('filled');
+                    } else {
+                        e.target.classList.remove('filled');
+                    }
+                    
+                    // Move to next input
+                    if (value && index < otpInputs.length - 1) {
+                        otpInputs[index + 1].focus();
+                    }
+                    
+                    // Update hidden input and check if complete
+                    updateOTPCode();
+                });
+
+                input.addEventListener('keydown', function(e) {
+                    // Handle backspace
+                    if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                        otpInputs[index - 1].focus();
+                        otpInputs[index - 1].classList.remove('filled');
+                    }
+                    
+                    // Handle paste
+                    if (e.key === 'v' && (e.ctrlKey || e.metaKey)) {
+                        e.preventDefault();
+                        handlePaste(e);
+                    }
+                });
+            });
+
+            function updateOTPCode() {
+                const otpCode = Array.from(otpInputs).map(input => input.value).join('');
+                otpCodeInput.value = otpCode;
+                
+                // Enable/disable submit button
+                if (otpCode.length === 6) {
+                    submitBtn.disabled = false;
+                    submitBtn.classList.add('btn-success');
+                    submitBtn.classList.remove('btn-primary');
+                    
+                    // Auto-submit after a short delay
+                    setTimeout(() => {
+                        if (otpCode.length === 6) {
+                            document.getElementById('otpForm').submit();
+                        }
+                    }, 500);
+                } else {
+                    submitBtn.disabled = true;
+                    submitBtn.classList.remove('btn-success');
+                    submitBtn.classList.add('btn-primary');
+                }
+            }
+
+            function handlePaste(e) {
+                const paste = (e.clipboardData || window.clipboardData).getData('text');
+                const numbers = paste.replace(/\D/g, '').slice(0, 6);
+                
+                numbers.split('').forEach((digit, index) => {
+                    if (otpInputs[index]) {
+                        otpInputs[index].value = digit;
+                        otpInputs[index].classList.add('filled');
+                    }
+                });
+                
+                updateOTPCode();
+                
+                // Focus last filled input or first empty
+                const lastFilledIndex = numbers.length - 1;
+                if (lastFilledIndex < otpInputs.length - 1) {
+                    otpInputs[lastFilledIndex + 1].focus();
+                } else {
+                    otpInputs[otpInputs.length - 1].focus();
+                }
+            }
+
+            // Start timer
+            function startTimer() {
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    countdown.textContent = timeLeft;
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        timer.style.display = 'none';
+                        resendBtn.style.display = 'inline-block';
+                    }
+                }, 1000);
+            }
+
+            startTimer();
+
+            // Resend button
+            resendBtn.addEventListener('click', function() {
+                // Reset timer
+                timeLeft = 60;
+                timer.style.display = 'block';
+                resendBtn.style.display = 'none';
+                startTimer();
+                
+                // Clear inputs
+                otpInputs.forEach(input => {
+                    input.value = '';
+                    input.classList.remove('filled');
+                });
+                otpCodeInput.value = '';
+                submitBtn.disabled = true;
+                otpInputs[0].focus();
+                
+                // Show success message
+                showNotification('تم إعادة إرسال الكود', 'success');
+            });
+
+            // Show notification function
+            function showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `alert alert-${type} fixed top-4 right-4 z-50 max-w-sm`;
+                notification.innerHTML = `
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                    <span>${message}</span>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            }
+
+            // Add some visual feedback
+            otpInputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.classList.add('pulse');
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.classList.remove('pulse');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+

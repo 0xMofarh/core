@@ -1,0 +1,247 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block page_title %}الملف الشخصي{% endblock %}
+{% load static %}
+{% block breadcrumb_items %}
+<li><a href="{% url 'dashboard:dashboard' %}">الصفحة الرئيسية</a></li>
+<li>الملف الشخصي</li>
+{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Profile Info -->
+    <div class="lg:col-span-1">
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body text-center">
+                
+                <div class="avatar">
+                    <div class="ring-primary ring-offset-base-100 w-24 rounded-full ring-2 ring-offset-2">
+                      <img src="{% static 'img/profile/1.jpg' %}" />
+                    </div>
+                  </div>
+                <h2 class="card-title justify-center text-2xl">{{ user.full_name }}</h2>
+                <p class="text-base-content/70">{{ user.email }}</p>
+                
+                {% if user.package %}
+                    <div class="badge badge-primary badge-lg mt-3">
+                        {% if user.package == 'free_trial' %}تجربة مجانية{% elif user.package == 'monthly' %}باقة شهرية{% endif %}
+                    </div>
+                {% endif %}
+                
+
+            </div>
+        </div>
+        
+        <!-- Account Status -->
+        <div class="card bg-base-100 shadow-xl mt-6">
+            <div class="card-body">
+                <h3 class="card-title text-lg mb-4">
+                    <i class="fas fa-shield-alt text-success"></i>
+                    حالة الحساب
+                </h3>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm">البريد الإلكتروني</span>
+                        <div class="flex items-center gap-2">
+                            <div class="badge badge-success badge-sm">موثق</div>
+                            <i class="fas fa-check-circle text-success"></i>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm">رقم الهاتف</span>
+                        <div class="flex items-center gap-2">
+                            <div class="badge badge-success badge-sm">موثق</div>
+                            <i class="fas fa-check-circle text-success"></i>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm">الحساب</span>
+                        <div class="flex items-center gap-2">
+                            <div class="badge badge-success badge-sm">نشط</div>
+                            <i class="fas fa-check-circle text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Form -->
+    <div class="lg:col-span-2">
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title text-2xl mb-6">
+                    <i class="fas fa-user-edit text-primary"></i>
+                    تحديث الملف الشخصي
+                </h2>
+                
+                <form class="space-y-6">
+                    <!-- Personal Information -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">الاسم الكامل</span>
+                            </label>
+                            <input type="text" value="{{ user.full_name }}" class="input input-bordered" readonly>
+                        </div>
+                        
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">البريد الإلكتروني</span>
+                            </label>
+                            <input type="email" value="{{ user.email }}" class="input input-bordered" readonly>
+                        </div>
+                        
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">رقم الهاتف</span>
+                            </label>
+                            <input type="tel" value="{{ user.mobile_number }}" class="input input-bordered" readonly>
+                        </div>
+                        
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">تاريخ الانضمام</span>
+                            </label>
+                            <input type="text" value="{{ user.date_joined|date:'Y/m/d' }}" class="input input-bordered" readonly>
+                        </div>
+                    </div>
+                    
+                    <!-- Package Information -->
+                    <div class="divider"></div>
+                    <h3 class="text-lg font-semibold mb-4">معلومات الباقة</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">الباقة الحالية</span>
+                            </label>
+                            <input type="text" 
+                                   value="{% if user.package == 'free_trial' %}تجربة مجانية - 7 أيام{% elif user.package == 'monthly' %}باقة شهرية - 299 ريال{% else %}غير محدد{% endif %}" 
+                                   class="input input-bordered" readonly>
+                        </div>
+                        
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">تاريخ انتهاء الباقة</span>
+                            </label>
+                            <input type="text" value="15 أكتوبر 2024" class="input input-bordered" readonly>
+                        </div>
+                    </div>
+                    
+                    <!-- Password Change -->
+                    <div class="divider"></div>
+                    <h3 class="text-lg font-semibold mb-4">تغيير كلمة المرور</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">كلمة المرور الحالية</span>
+                            </label>
+                            <input type="password" class="input input-bordered" placeholder="أدخل كلمة المرور الحالية">
+                        </div>
+                        
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">كلمة المرور الجديدة</span>
+                            </label>
+                            <input type="password" class="input input-bordered" placeholder="أدخل كلمة المرور الجديدة">
+                        </div>
+                        
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">تأكيد كلمة المرور</span>
+                            </label>
+                            <input type="password" class="input input-bordered" placeholder="أعد إدخال كلمة المرور الجديدة">
+                        </div>
+                    </div>
+                    
+                    <!-- Form Actions -->
+                    <div class="card-actions justify-end mt-8">
+                        <button type="button" class="btn btn-ghost">إلغاء</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save mr-2"></i>
+                            حفظ التغييرات
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Account Statistics -->
+        <div class="card bg-base-100 shadow-xl mt-8">
+            <div class="card-body">
+                <h3 class="card-title text-xl mb-4">
+                    <i class="fas fa-chart-bar text-primary"></i>
+                    إحصائيات الحساب
+                </h3>
+                
+                <div class="stats stats-horizontal shadow-sm">
+                    <div class="stat">
+                        <div class="stat-figure text-primary">
+                            <i class="fas fa-bullhorn text-3xl"></i>
+                        </div>
+                        <div class="stat-title">الحملات</div>
+                        <div class="stat-value text-primary">12</div>
+                        <div class="stat-desc">حملة منشأة</div>
+                    </div>
+                    
+                    <div class="stat">
+                        <div class="stat-figure text-secondary">
+                            <i class="fas fa-users text-3xl"></i>
+                        </div>
+                        <div class="stat-title">المؤثرين</div>
+                        <div class="stat-value text-secondary">45</div>
+                        <div class="stat-desc">مؤثر متعاقد</div>
+                    </div>
+                    
+                    <div class="stat">
+                        <div class="stat-figure text-accent">
+                            <i class="fas fa-eye text-3xl"></i>
+                        </div>
+                        <div class="stat-title">الوصول</div>
+                        <div class="stat-value text-accent">2.1M</div>
+                        <div class="stat-desc">إجمالي الوصول</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Security Settings -->
+        <div class="card bg-base-100 shadow-xl mt-8">
+            <div class="card-body">
+                <h3 class="card-title text-xl mb-4">
+                    <i class="fas fa-shield-alt text-warning"></i>
+                    إعدادات الأمان
+                </h3>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-4 bg-base-200 rounded-box">
+                        <div>
+                            <h4 class="font-semibold">المصادقة الثنائية</h4>
+                            <p class="text-sm text-base-content/70">قم بتفعيل المصادقة الثنائية لحماية حسابك</p>
+                        </div>
+                        <input type="checkbox" class="toggle toggle-primary" />
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-4 bg-base-200 rounded-box">
+                        <div>
+                            <h4 class="font-semibold">إشعارات البريد الإلكتروني</h4>
+                            <p class="text-sm text-base-content/70">تلقي إشعارات مهمة عبر البريد الإلكتروني</p>
+                        </div>
+                        <input type="checkbox" class="toggle toggle-primary" checked />
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-4 bg-base-200 rounded-box">
+                        <div>
+                            <h4 class="font-semibold">جلسات نشطة</h4>
+                            <p class="text-sm text-base-content/70">إدارة الجلسات النشطة على الأجهزة الأخرى</p>
+                        </div>
+                        <button class="btn btn-sm btn-outline">عرض</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
