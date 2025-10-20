@@ -5,7 +5,6 @@ from . import views
 app_name = 'dashboard'
 
 urlpatterns = [
-    # Dashboard home
     path('', views.dashboard_home, name='dashboard'),
     path('influencers/', lambda request: redirect('influencers:influencers_search')),
     path('/campaigns/', lambda request: redirect('campaigns:campaigns_list')),
