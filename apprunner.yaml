@@ -11,35 +11,3 @@ run:
   command: sh startup.sh
   network:
     port: 8000
-  env:
-    - name: DJANGO_SETTINGS_MODULE
-      value: config.settings
-    - name: PYTHONUNBUFFERED
-      value: "1"
-
-# يمكنك تعريف متغيرات البيئة هنا (أو من لوحة App Runner مباشرة)
-# يُفضل وضع القيم الحساسة مثل كلمات المرور من لوحة AWS وليس هنا
-environment:
-  variables:
-    DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
-    DEBUG: "False"
-    POSTGRES_DB: ${POSTGRES_DB}
-    POSTGRES_USER: ${POSTGRES_USER}
-    POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    POSTGRES_HOST: ${POSTGRES_HOST}
-    POSTGRES_PORT: "5432"
-    EMAIL_HOST_USER: ${EMAIL_HOST_USER}
-    EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
-    DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL}
-
-# خيارات إضافية للاتصال بـ RDS داخل VPC (اختياري)
-vpc_connector:
-  name: your-vpc-connector-name
-
-# تخصيص الصحة (Health Check)
-health_check:
-  path: /
-  interval: 10
-  timeout: 5
-  healthy_threshold: 3
-  unhealthy_threshold: 3
