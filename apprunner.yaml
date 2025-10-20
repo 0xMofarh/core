@@ -2,24 +2,20 @@ version: 1.0
 runtime: python3
 
 build:
-  commands:
-    - pip install --upgrade pip
-    - pip install -r requirements.txt
-    - python manage.py collectstatic --noinput
-    - python manage.py migrate --noinput
+  command: |
+    pip install --upgrade pip
+    pip install -r requirements.txt
+    python manage.py collectstatic --noinput
+    python manage.py migrate --noinput
 
 run:
   command: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
   network:
     port: 8000
   env:
-    - name: DJANGO_SETTINGS_MODULE
-      value: config.settings
-    - name: PYTHONUNBUFFERED
-      value: "1"
+    DJANGO_SETTINGS_MODULE: config.settings
+    PYTHONUNBUFFERED: "1"
 
-# يمكنك تعريف متغيرات البيئة هنا (أو من لوحة App Runner مباشرة)
-# يُفضل وضع القيم الحساسة مثل كلمات المرور من لوحة AWS وليس هنا
 environment:
   variables:
     DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
@@ -33,11 +29,9 @@ environment:
     EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
     DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL}
 
-# خيارات إضافية للاتصال بـ RDS داخل VPC (اختياري)
 vpc_connector:
   name: your-vpc-connector-name
 
-# تخصيص الصحة (Health Check)
 health_check:
   path: /
   interval: 10
