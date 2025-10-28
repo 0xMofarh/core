@@ -95,21 +95,21 @@
                     <div class="w-16 h-16 gradient-primary rounded-2xl flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-users text-white text-2xl"></i>
                     </div>
-                    <div class="text-3xl font-bold text-gradient mb-2">10,000+</div>
+                    <div class="text-3xl font-bold text-gradient mb-2">{{ total_influencers }}</div>
                     <div class="text-gray-600 text-modern font-medium">مؤثر مسجل</div>
                 </div>
                 <div class="glass-card rounded-2xl p-6 text-center card-modern">
                     <div class="w-16 h-16 gradient-secondary rounded-2xl flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-building text-white text-2xl"></i>
                     </div>
-                    <div class="text-3xl font-bold text-gradient mb-2">2,500+</div>
+                    <div class="text-3xl font-bold text-gradient mb-2">{{ total_users }}</div>
                     <div class="text-gray-600 text-modern font-medium">شركة مستفيدة</div>
                 </div>
                 <div class="glass-card rounded-2xl p-6 text-center card-modern">
                     <div class="w-16 h-16 gradient-accent rounded-2xl flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-chart-line text-white text-2xl"></i>
                     </div>
-                    <div class="text-3xl font-bold text-gradient mb-2">25,000+</div>
+                    <div class="text-3xl font-bold text-gradient mb-2">{{ total_campaigns }}</div>
                     <div class="text-gray-600 text-modern font-medium">حملة ناجحة</div>
                 </div>
             </div>
@@ -337,7 +337,7 @@
                 <div class="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
                     <i class="fas fa-users text-white text-3xl"></i>
                 </div>
-                <div class="text-4xl font-bold mb-2 counter" data-target="10000">0</div>
+                <div class="text-4xl font-bold mb-2 counter" data-target="{{ total_influencers }}">0</div>
                 <div class="text-white/90 text-modern font-medium">مؤثر مسجل</div>
                 <div class="text-white/70 text-sm mt-2">من جميع أنحاء العالم</div>
             </div>
@@ -346,7 +346,7 @@
                 <div class="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
                     <i class="fas fa-building text-white text-3xl"></i>
                 </div>
-                <div class="text-4xl font-bold mb-2 counter" data-target="2500">0</div>
+                <div class="text-4xl font-bold mb-2 counter" data-target="{{ total_users }}">0</div>
                 <div class="text-white/90 text-modern font-medium">شركة مستفيدة</div>
                 <div class="text-white/70 text-sm mt-2">من الشركات الرائدة</div>
             </div>
@@ -355,7 +355,7 @@
                 <div class="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
                     <i class="fas fa-chart-line text-white text-3xl"></i>
                 </div>
-                <div class="text-4xl font-bold mb-2 counter" data-target="25000">0</div>
+                <div class="text-4xl font-bold mb-2 counter" data-target="{{ total_campaigns }}">0</div>
                 <div class="text-white/90 text-modern font-medium">حملة ناجحة</div>
                 <div class="text-white/70 text-sm mt-2">مع نتائج مضمونة</div>
             </div>

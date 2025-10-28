@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إضافة مؤثر جديد - منصة المؤثرين</title>
+    <title>إضافة مؤثر جديد - منصة التاثيرالرقمي</title>
     
     <!-- TailwindCSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -166,21 +166,21 @@
                                 </label>
                                 <select name="city" class="select select-bordered w-full" required>
                                     <option value="" disabled selected>اختر المدينة</option>
-                                    <option value="riyadh">الرياض</option>
-                                    <option value="jeddah">جدة</option>
-                                    <option value="makkah">مكة المكرمة</option>
-                                    <option value="madinah">المدينة المنورة</option>
-                                    <option value="dammam">الدمام</option>
-                                    <option value="khobar">الخبر</option>
-                                    <option value="dhahran">الظهران</option>
-                                    <option value="taif">الطائف</option>
-                                    <option value="tabuk">تبوك</option>
-                                    <option value="abha">أبها</option>
-                                    <option value="khamis_mushait">خميس مشيط</option>
-                                    <option value="hail">حائل</option>
-                                    <option value="najran">نجران</option>
-                                    <option value="jazan">جازان</option>
-                                    <option value="other">أخرى</option>
+                                    <option value="الرياض">الرياض</option>
+                                    <option value="جدة">جدة</option>
+                                    <option value="مكة">مكة المكرمة</option>
+                                    <option value="المدينة المنورة">المدينة المنورة</option>
+                                    <option value="الدمام">الدمام</option>
+                                    <option value="الخبر">الخبر</option>
+                                    <option value="الظهران">الظهران</option>
+                                    <option value="الطايف">الطائف</option>
+                                    <option value="تبوك">تبوك</option>
+                                    <option value="ابها">أبها</option>
+                                    <option value="خميس مشيط">خميس مشيط</option>
+                                    <option value="حائل">حائل</option>
+                                    <option value="نجران">نجران</option>
+                                    <option value="جازان">جازان</option>
+                                    <option value="اخرى">أخرى</option>
                                 </select>
                             </div>
                         </div>
@@ -263,7 +263,7 @@
 
                         <div class="alert alert-info mt-4">
                             <i class="fas fa-info-circle"></i>
-                            <span>قم بإدخال اسم المستخدم فقط بدون (@) أو الرابط الكامل</span>
+                            <span>قم بإدخال اسم المستخدم فقط بدون (@)</span>
                         </div>
                     </div>
 
@@ -395,7 +395,7 @@
                                     <i class="fas fa-coffee text-primary ml-2"></i>
                                     نمط الحياة
                                 </span>
-                                <input type="checkbox" name="categories" value="lifestyle" class="checkbox checkbox-primary" />
+                                <input type="checkbox" name="categories" value="نمط الحياة" class="checkbox checkbox-primary" />
                             </label>
 
                             <!-- Art -->
@@ -404,7 +404,7 @@
                                     <i class="fas fa-palette text-primary ml-2"></i>
                                     الفن والإبداع
                                 </span>
-                                <input type="checkbox" name="categories" value="art" class="checkbox checkbox-primary" />
+                                <input type="checkbox" name="categories" value="الفن والإبداع" class="checkbox checkbox-primary" />
                             </label>
 
                             <!-- Cars -->
@@ -413,7 +413,7 @@
                                     <i class="fas fa-car text-primary ml-2"></i>
                                     السيارات
                                 </span>
-                                <input type="checkbox" name="categories" value="cars" class="checkbox checkbox-primary" />
+                                <input type="checkbox" name="categories" value="السيارات" class="checkbox checkbox-primary" />
                             </label>
 
                             <!-- Other -->
@@ -452,7 +452,7 @@
         <aside>
             <i class="fas fa-users text-5xl text-primary"></i>
             <p class="font-bold text-lg">
-                منصة المؤثرين
+                منصة التاثير الرقمي
             </p> 
             <p>جميع الحقوق محفوظة © 2025</p>
         </aside>
@@ -470,7 +470,6 @@
             }
         });
 
-        // Add animation on checkbox change
         document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
             checkbox.addEventListener('change', function() {
                 const label = this.closest('label');

@@ -47,6 +47,7 @@
                     </select>
                 </div>
 
+ 
                 <!-- Gender Filter -->
                 <div class="form-control">
                     <label class="label">
@@ -70,8 +71,7 @@
                             <option value="{{ platform }}" {% if filters.platform == platform %}selected{% endif %}>
                                 {% if platform == 'tiktok' %}تيك توك
                                 {% elif platform == 'instagram' %}إنستقرام
-                                {% elif platform == 'twitter' %}تويتر
-                                {% elif platform == 'youtube' %}يوتيوب
+                                {% elif platform == 'snapchat' %} سناب شات
                                 {% else %}{{ platform|title }}{% endif %}
                             </option>
                         {% endfor %}
@@ -114,8 +114,50 @@
                     </select>
                 </div>
             </div>
+               <div class="form-control">
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+  {% for cat in categories %}
+    <label class="cursor-pointer">
+      <input
+        type="checkbox"
+        name="categories"
+        value="{{ cat }}"
+        class="hidden category-checkbox"
+        {% if cat in filters.categories %}checked{% endif %}
+      />
+      <div
+        class="p-4 text-center rounded-lg border border-gray-300 shadow-sm hover:shadow-lg transition-colors duration-200
+               bg-white hover:bg-indigo-100 checked:bg-blue-700 checked:text-white flex items-center justify-center"
+      >
+        {{ cat }}
+      </div>
+    </label>
+  {% endfor %}
+</div>
 
-            <!-- Filter Buttons -->
+<script>
+  // تغيير لون البطاقة عند التحديد
+  document.querySelectorAll('.category-checkbox').forEach(checkbox => {
+    const card = checkbox.nextElementSibling;
+    // عند التغيير
+    checkbox.addEventListener('change', () => {
+      if (checkbox.checked) {
+        card.classList.add('bg-blue-700', 'text-white');
+      } else {
+        card.classList.remove('bg-blue-700', 'text-white');
+      }
+    });
+
+    // ضبط اللون عند التحميل حسب حالة checked
+    if (checkbox.checked) {
+      card.classList.add('bg-blue-700s', 'text-white');
+    }
+  });
+</script>
+
+
+
+                </div>
             <div class="flex flex-col sm:flex-row gap-4 justify-end">
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-filter mr-2"></i>

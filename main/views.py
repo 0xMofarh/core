@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-
+from .services import MainService
 
 # def landing_view(request):
 #     """
@@ -10,10 +10,9 @@ from django.contrib.auth.decorators import login_required
 
 
 def home_view(request):
-    """
-    الصفحة الرئيسية للمستخدمين المسجلين
-    """
-    return render(request, 'main/landing.html')
+    services = MainService()
+    context = services.get_main_data()
+    return render(request, 'main/landing.html',context)
 
 def custom_404(request, exception):
     return render(request, 'main/404.html', status=404)

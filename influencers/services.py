@@ -1,6 +1,5 @@
 from .repositories import InfluencerRepository
 from django.core.paginator import Paginator
-from django.contrib import messages
 from django.shortcuts import redirect
 
 class InfluencerService:
@@ -13,6 +12,8 @@ class InfluencerService:
         queryset = self.repo.filter_by_city(queryset, filters.get("city"))
         queryset = self.repo.filter_by_gender(queryset, filters.get("gender"))
         queryset = self.repo.filter_by_platform(queryset, filters.get("platform"))
+        queryset = self.repo.filter_by_category(queryset, filters.getlist("categories") if hasattr(filters, "getlist") else filters.get("categories"))
+        
         queryset = self.repo.filter_by_followers(
             queryset,
             filters.get("followers_min"),
@@ -20,7 +21,6 @@ class InfluencerService:
         )
         queryset = self.repo.order_by(queryset, filters.get("sort_by", "id"))
 
-        # تجهيز البيانات النهائية مع الحسابات والإحصائيات
         influencers_data = []
         for inf in queryset:
             accounts = inf.social_accounts.all()
@@ -44,6 +44,7 @@ class InfluencerService:
                 "social_accounts": accounts_data,
                 "total_followers": total_followers,
                 "created_at": inf.created_at,
+                "category": inf.categories,
             })
 
         paginator = Paginator(influencers_data, per_page)
@@ -53,7 +54,8 @@ class InfluencerService:
             "page_obj": page_obj,
             "filters": filters,
             "cities": self.repo.get_cities(),
-            "platforms": self.repo.get_platforms()
+            "platforms": self.repo.get_platforms(),
+            "categories": self.repo.get_categories(),
         }
 
     def add_influencer(self, request):
@@ -71,7 +73,6 @@ class InfluencerService:
             city=city
         )
 
-        # تجهيز بيانات حسابات التواصل
         accounts_data = []
         for platform in ["tiktok", "instagram", "snapchat"]:
             username = request.POST.get(f"{platform}_username")
@@ -92,6 +93,8 @@ class InfluencerService:
                 influencers = influencers.filter(name__icontains=filters["search"])
             if filters.get("city"):
                 influencers = influencers.filter(city=filters["city"])
+            if filters.get("category"):
+                influencers = influencers.filter(categories__name__icontains=filters["category"])
             if filters.get("gender"):
                 influencers = influencers.filter(gender=filters["gender"])
             if filters.get("platform"):

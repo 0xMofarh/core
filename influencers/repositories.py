@@ -15,6 +15,14 @@ class InfluencerRepository:
             return queryset.filter(city=city)
         return queryset
 
+    def filter_by_category(self, queryset, categories):
+        if categories:
+            if isinstance(categories, list):  # في حال المستخدم اختار أكثر من تصنيف
+                return queryset.filter(categories__name__in=categories).distinct()
+            else:  # في حال اختار تصنيف واحد فقط
+                return queryset.filter(categories__name=categories).distinct()
+        return queryset
+
     def filter_by_gender(self, queryset, gender):
         if gender:
             return queryset.filter(gender=gender)
@@ -42,6 +50,10 @@ class InfluencerRepository:
 
     def get_cities(self):
         return Influencer.objects.values_list("city", flat=True).distinct()
+
+    def get_categories(self):
+        return Category.objects.values_list("name", flat=True).distinct()
+
 
     def get_platforms(self):
         return SocialAccount.objects.values_list("platform", flat=True).distinct()
